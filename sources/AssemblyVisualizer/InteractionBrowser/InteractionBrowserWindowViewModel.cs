@@ -318,7 +318,8 @@ namespace AssemblyVisualizer.InteractionBrowser
 
         private MemberGraph CreateGraph(IEnumerable<TypeViewModel> typeViewModels)
         {
-            var graph = new MemberGraph(true);            
+            var graph = new MemberGraph(true);    
+            var types = typeViewModels.Select(vm => vm.TypeInfo).ToArray();
 
             foreach (var typeViewModel in typeViewModels)
             {    
@@ -340,10 +341,11 @@ namespace AssemblyVisualizer.InteractionBrowser
                     if (!graph.ContainsVertex(mvm))
                     {
                         graph.AddVertex(mvm);
-                    }
+                    }                    
 
-                    var usedMethods = Helper.GetUsedMethods(method.MemberReference)
-                        .Where(m => typeViewModels.Any(t => t.TypeInfo == m.DeclaringType && (m.IsVisibleOutside() || t.ShowInternals)) && !m.Name.StartsWith("<"))
+                    var usedMethodsRaw = Helper.GetUsedMethods(method.MemberReference).ToArray();
+                    var usedMethods = FixDeclaringTypes(usedMethodsRaw, types)
+                        .Where(m => typeViewModels.Any(t => (m.IsVisibleOutside() || t.ShowInternals)) && !m.Name.StartsWith("<"))
                         .ToArray();
                     foreach (var usedMethod in usedMethods)
                     {
@@ -355,9 +357,10 @@ namespace AssemblyVisualizer.InteractionBrowser
                         graph.AddEdge(new Edge<MemberViewModel>(mvm, vm));
                     }
 
-                    var usedFields = Helper.GetUsedFields(method.MemberReference)
+                    var usedFieldsRaw = Helper.GetUsedFields(method.MemberReference).ToArray();
+                    var usedFields = FixDeclaringTypes(usedFieldsRaw, types)
                         .Where(m => typeViewModels.Any(
-                            tvm => tvm.TypeInfo == m.DeclaringType && (m.IsVisibleOutside() || tvm.ShowInternals)) && !m.Name.StartsWith("CS$") && !m.Name.EndsWith("k__BackingField"))
+                            tvm => (m.IsVisibleOutside() || tvm.ShowInternals)) && !m.Name.StartsWith("CS$") && !m.Name.EndsWith("k__BackingField"))
                         .ToArray();
                     foreach (var usedField in usedFields)
                     {
@@ -377,6 +380,53 @@ namespace AssemblyVisualizer.InteractionBrowser
             }            
 
             return graph;
+        }
+
+        private IEnumerable<MethodInfo> FixDeclaringTypes(MethodInfo[] methods, TypeInfo[] types)
+        {
+            var fixedMethods = new List<MethodInfo>();
+            var typeFullNames = types.Select(t => t.FullName).ToArray();
+            foreach (var method in methods)
+            {
+                if (types.Contains(method.DeclaringType))
+                {
+                    fixedMethods.Add(method);
+                    continue;
+                }
+                if (typeFullNames.Contains(method.DeclaringType.FullName))
+                {
+                    var type = types.Single(t => t.FullName == method.DeclaringType.FullName);
+                    var realMethod = type.Methods.SingleOrDefault(m => m.MemberReference.ToString() == method.MemberReference.ToString());
+                    if (realMethod == null)
+                    {
+                        realMethod = type.Accessors.Single(m => m.MemberReference.ToString() == method.MemberReference.ToString());
+                    }
+                    fixedMethods.Add(realMethod);
+                }
+            }
+            return fixedMethods;
+        }
+
+        private IEnumerable<FieldInfo> FixDeclaringTypes(FieldInfo[] fields, TypeInfo[] types)
+        {
+            var fixedFields = new List<FieldInfo>();
+            var typeFullNames = types.Select(t => t.FullName).ToArray();
+            foreach (var field in fields)
+            {
+                if (types.Contains(field.DeclaringType))
+                {
+                    fixedFields.Add(field);
+                    continue;
+                }
+                if (typeFullNames.Contains(field.DeclaringType.FullName))
+                {
+                    var type = types.Single(t => t.FullName == field.DeclaringType.FullName);
+                    var realField = type.Fields.Single(m => m.Name == field.Name);
+                    
+                    fixedFields.Add(realField);
+                }
+            }
+            return fixedFields;
         }
 
         private MemberViewModel GetViewModelForField(FieldInfo fieldInfo)
