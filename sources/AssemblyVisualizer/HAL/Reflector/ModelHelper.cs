@@ -27,9 +27,18 @@ namespace AssemblyVisualizer.HAL.Reflector
         {
             var methodDeclaration = method as IMethodDeclaration;
             var type = methodDeclaration.DeclaringType as ITypeDeclaration;
-            var property = type.Properties.OfType<IPropertyDeclaration>().Single(p => p.GetMethod == methodDeclaration || p.SetMethod == methodDeclaration);
-            
-            return HAL.Converter.Property(property);            
+            var property = type.Properties
+                .OfType<IPropertyDeclaration>()
+                .SingleOrDefault(p => p.GetMethod == methodDeclaration || p.SetMethod == methodDeclaration);
+            if (property == null)
+            {
+                property = type.Properties
+                    .OfType<IPropertyDeclaration>()
+                    .Single(p => p.GetMethod != null && p.GetMethod.Name == methodDeclaration.Name
+                                 || p.SetMethod != null && p.SetMethod.Name == methodDeclaration.Name);
+            }
+
+            return HAL.Converter.Property(property);
         }
 
         public EventInfo GetAccessorEvent(object method)
