@@ -60,7 +60,7 @@
                             Width="{TemplateBinding Width}" 
                             Height="{TemplateBinding Height}"
                             Background="{TemplateBinding Background}">
-                        <ContentPresenter/>
+                        <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>                        
                         <Trigger Property="IsEnabled" Value="False">

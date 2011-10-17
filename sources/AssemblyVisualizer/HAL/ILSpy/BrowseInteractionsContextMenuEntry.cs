@@ -33,13 +33,9 @@ namespace AssemblyVisualizer.HAL.ILSpy
             var types = selectedNodes
                 .OfType<TypeTreeNode>()
                 .Select(n => HAL.Converter.Type(n.TypeDefinition))
-                .ToArray();            
+                .ToArray();
 
-            var window = new InteractionBrowserWindow(types, true)
-            {
-                Owner = MainWindow.Instance
-            };
-            window.Show();
+            Services.BrowseInteractions(types, true);            
         }
     }
 }

@@ -27,7 +27,7 @@ namespace AssemblyVisualizer.HAL.ILSpy
         public event EventHandler CanExecuteChanged;
 
         public void Execute(object parameter)
-        {
+        {  
             var selectedNodes = MainWindow.Instance.SelectedNodes;
 
             var types = selectedNodes
@@ -40,11 +40,7 @@ namespace AssemblyVisualizer.HAL.ILSpy
                 return;
             }
 
-            var window = new InteractionBrowserWindow(types, false)
-            {
-                Owner = MainWindow.Instance
-            };
-            window.Show();
+            Services.BrowseInteractions(types, false);
         }
     }
 }

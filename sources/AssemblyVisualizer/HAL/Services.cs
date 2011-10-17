@@ -39,6 +39,23 @@ namespace AssemblyVisualizer.HAL
 
         public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph)
         {
+            BrowseInteractions(types, drawGraph, false);
+        }
+
+        public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph, bool passSelection)
+        {
+            if (WindowManager.InteractionBrowsers.Count > 0 && !passSelection)
+            {
+                var selectionWindow = new SelectionWindow(types, drawGraph);
+#if ILSpy
+                selectionWindow.Owner = MainWindow;
+#elif Reflector
+                System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(selectionWindow);
+#endif
+                selectionWindow.Show();
+                return;
+            }
+
             var window = new InteractionBrowserWindow(types, drawGraph);
 #if ILSpy
             window.Owner = MainWindow;

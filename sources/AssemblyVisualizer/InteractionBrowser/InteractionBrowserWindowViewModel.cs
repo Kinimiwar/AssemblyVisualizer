@@ -36,9 +36,7 @@ namespace AssemblyVisualizer.InteractionBrowser
         private string _searchTerm;
 
         public InteractionBrowserWindowViewModel(IEnumerable<TypeInfo> types, bool drawGraph)
-        {
-            _types = types;
-
+        {  
             ApplySelectionCommand = new DelegateCommand(ApplySelectionCommandHandler);
             ShowSelectionViewCommand = new DelegateCommand(ShowSelectionViewCommandHandler);
             HideSelectionViewCommand = new DelegateCommand(HideSelectionViewCommandHandler);
@@ -52,28 +50,9 @@ namespace AssemblyVisualizer.InteractionBrowser
 			           		new UserCommand(Resources.OriginalSize, OnOriginalSizeRequest),	
                             new UserCommand(Resources.SelectTypes, ShowSelectionViewCommand),
                             new UserCommand(Resources.SearchInGraph, ShowSearchCommand),                                                    
-			           	};            
+			           	};
 
-            _hierarchies = types
-                .Select(GetHierarchy)                
-                .ToArray();
-
-            foreach (var hierarchy in _hierarchies)
-            {
-                hierarchy.AllSelected = true;
-                HideWpfInternals(hierarchy);
-            }
-
-            _showStaticConstructors = !ContainsWpfInternals;
-
-            if (drawGraph)
-            {
-                DrawGraph();
-            }
-            else
-            {
-                _isTypeSelectionVisible = true;
-            }
+            AddTypes(types, drawGraph);
         }
 
         public event Action FillGraphRequest;
@@ -231,6 +210,35 @@ namespace AssemblyVisualizer.InteractionBrowser
             {
                 return Resources.InteractionBrowser;
             }
+        }
+
+        public void AddTypes(IEnumerable<TypeInfo> types, bool drawGraph)
+        {
+            _types = _types == null ? types : _types.Concat(types).ToList();
+
+            Hierarchies = _types
+                .Select(GetHierarchy)
+                .ToArray();
+
+            foreach (var hierarchy in _hierarchies)
+            {
+                hierarchy.AllSelected = true;
+                HideWpfInternals(hierarchy);
+            }
+
+            _showStaticConstructors = !ContainsWpfInternals;
+
+            if (drawGraph)
+            {
+                DrawGraph();
+            }
+            else
+            {
+                IsTypeSelectionVisible = true;
+            }
+
+            OnPropertyChanged("ContainsWpfInternals");
+            OnPropertyChanged("ShowStaticConstructors");
         }
 
         public void ReportSelectionChanged()

@@ -73,6 +73,20 @@ namespace AssemblyVisualizer.InteractionBrowser
             }
         }
 
+        public Visual Thumbnail
+        {
+            get
+            {
+                return zoomControl;
+            }
+        }
+
+        public void AddTypes(IEnumerable<TypeInfo> types, bool drawGraph)
+        {
+            ViewModel.AddTypes(types, drawGraph);
+            Activate();
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

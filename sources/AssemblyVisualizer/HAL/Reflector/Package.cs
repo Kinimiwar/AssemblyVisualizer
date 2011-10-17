@@ -103,10 +103,7 @@ namespace AssemblyVisualizer.HAL.Reflector
         private void BrowseInteractionsHandler(object sender, EventArgs e)
         {          
             var item = _assemblyBrowser.ActiveItem as ITypeDeclaration;
-
-            var window = new InteractionBrowserWindow(new [] { HAL.Converter.Type(item) }, true);
-            System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(window);
-            window.Show();
+            Services.BrowseInteractions(new[] { HAL.Converter.Type(item) }, true);            
         }
 
         public void Unload()
