@@ -81,6 +81,14 @@ namespace AssemblyVisualizer.InteractionBrowser
             }
         }
 
+        public string ThumbnailTooltip
+        {
+            get
+            { 
+                return string.Join("\n", ViewModel.Hierarchies.Select(h => h.Types.First().Name));
+            }
+        }
+
         public void AddTypes(IEnumerable<TypeInfo> types, bool drawGraph)
         {
             ViewModel.AddTypes(types, drawGraph);

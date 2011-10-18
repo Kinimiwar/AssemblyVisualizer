@@ -15,52 +15,73 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <ItemsControl ItemsSource="{Binding Thumbnails}"
-                      HorizontalAlignment="Center">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>                
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Command="{Binding SelectCommand}"
-                            Background="Transparent">
-                        <Button.Template>
-                            <ControlTemplate TargetType="{x:Type ButtonBase}">                                
-                                <ContentPresenter VerticalAlignment="Center" />
-                            </ControlTemplate>
-                        </Button.Template>
-                        <Border Width="250" 
-                                Height="250"
-                                BorderBrush="Gray"
-                                Background="Transparent"
-                                BorderThickness="1"
-                                Margin="5">
-                            <Grid>                                
-                                <Border x:Name="brdBrush">
-                                    <Border.Background>
-                                        <VisualBrush Visual="{Binding Thumbnail}"/>
-                                    </Border.Background>
-                                </Border>
-                                <TextBlock x:Name="txtNewWindow"
-                                           Text="New window" 
-                                           FontSize="24"
-                                           Foreground="Gray"
-                                           Visibility="Collapsed"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                    </Button>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding IsNewWindow}" Value="True">
-                            <Setter TargetName="brdBrush" Property="Visibility" Value="Collapsed"/>
-                            <Setter TargetName="txtNewWindow" Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Foreground="Gray"
+                   FontSize="24"
+                   Text="Select window to use"
+                   Margin="6"
+                   HorizontalAlignment="Center"/>
+        <ScrollViewer HorizontalAlignment="Center"
+                      Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Thumbnails}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>                
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding SelectCommand}"
+                                Background="Transparent">
+                            <Button.Template>
+                                <ControlTemplate TargetType="{x:Type ButtonBase}">                                
+                                    <ContentPresenter VerticalAlignment="Center" />
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Border Width="250" 
+                                    Height="250"
+                                    BorderBrush="Gray"
+                                    Background="White"
+                                    BorderThickness="1"
+                                    Margin="5"
+                                    x:Name="brd">
+                                <Grid>                                
+                                    <Border x:Name="brdBrush"
+                                            ToolTip="{Binding Tooltip}">
+                                        <Border.Background>
+                                            <VisualBrush Visual="{Binding Thumbnail}"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <TextBlock x:Name="txtNewWindow"
+                                               Text="New window" 
+                                               FontSize="24"
+                                               Foreground="Gray"
+                                               Visibility="Collapsed"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </Button>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsNewWindow}" Value="True">
+                                <Setter TargetName="brdBrush" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="txtNewWindow" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="brd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>

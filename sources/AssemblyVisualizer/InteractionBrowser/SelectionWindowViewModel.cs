@@ -19,8 +19,9 @@ namespace AssemblyVisualizer.InteractionBrowser
     {
         public SelectionWindowViewModel(IEnumerable<TypeInfo> types, bool drawGraph, SelectionWindow window)
         {
-            var thumbnails = WindowManager.InteractionBrowsers.Select(ib => new ThumbnailViewModel(ib.Thumbnail, () => { ib.AddTypes(types, drawGraph); window.Close(); })).ToList();
+            var thumbnails = WindowManager.InteractionBrowsers.Select(ib => new ThumbnailViewModel(ib.Thumbnail, ib.ThumbnailTooltip, () => { ib.AddTypes(types, drawGraph); window.Close(); })).ToList();
             var newWindowThumbnail = new ThumbnailViewModel(
+                null, 
                 null,
                 () =>
                 {
