@@ -214,7 +214,11 @@ namespace AssemblyVisualizer.InteractionBrowser
 
         public void AddTypes(IEnumerable<TypeInfo> types, bool drawGraph)
         {
-            _types = _types == null ? types : _types.Concat(types).ToList();
+            if (_types != null && types.All(t => _types.Contains(t)))
+            {
+                return;
+            }
+            _types = _types == null ? types : _types.Concat(types).Distinct().ToList();
 
             Hierarchies = _types
                 .Select(GetHierarchy)

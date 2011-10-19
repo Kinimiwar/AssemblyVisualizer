@@ -48,7 +48,8 @@
                                     Background="White"
                                     BorderThickness="1"
                                     Margin="5"
-                                    x:Name="brd">
+                                    x:Name="brd"
+                                    Cursor="Hand">
                                 <Grid>                                
                                     <Border x:Name="brdBrush"
                                             ToolTip="{Binding Tooltip}">
