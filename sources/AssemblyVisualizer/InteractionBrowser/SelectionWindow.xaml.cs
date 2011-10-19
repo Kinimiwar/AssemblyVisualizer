@@ -23,7 +23,32 @@ namespace AssemblyVisualizer.InteractionBrowser
         public SelectionWindow(IEnumerable<TypeInfo> types, bool drawGraph)
         {
             InitializeComponent();
-            DataContext = new SelectionWindowViewModel(types, drawGraph, this);            
-        }        
+            DataContext = new SelectionWindowViewModel(types, drawGraph, this);
+
+            WindowManager.InteractionBrowsersChanged += InteractionBrowsersChangedHandler;
+        }
+
+        public SelectionWindowViewModel ViewModel
+        {
+            get
+            {
+                return DataContext as SelectionWindowViewModel;
+            }
+            set
+            {
+                DataContext = value;
+            }
+        }
+
+        private void InteractionBrowsersChangedHandler()
+        {
+            ViewModel.Refresh();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            WindowManager.InteractionBrowsersChanged -= InteractionBrowsersChangedHandler;
+        }
     }
 }

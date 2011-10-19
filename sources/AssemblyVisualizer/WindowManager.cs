@@ -26,6 +26,8 @@ namespace AssemblyVisualizer
         private static readonly IList<InteractionBrowserWindow> _interactionBrowsers =
             new List<InteractionBrowserWindow>();
 
+        public static event Action InteractionBrowsersChanged;
+
 		public static IList<AssemblyBrowserWindow> AssemblyBrowsers
 		{
 			get { return _assemblyBrowsers; }
@@ -85,6 +87,7 @@ namespace AssemblyVisualizer
         public static void AddInteractionBrowser(InteractionBrowserWindow window)
         {
             _interactionBrowsers.Add(window);
+            OnInteractionBrowsersChanged();
         }
 
         public static void RemoveInteractionBrowser(InteractionBrowserWindow window)
@@ -92,6 +95,7 @@ namespace AssemblyVisualizer
             _interactionBrowsers.Remove(window);
             ClearCacheIfPossible();
             GC.Collect();
+            OnInteractionBrowsersChanged();
         }
 
         private static void ClearCacheIfPossible()
@@ -103,6 +107,15 @@ namespace AssemblyVisualizer
             {
                 Converter.ClearCache();
             }
-        }        
+        }
+
+        private static void OnInteractionBrowsersChanged()
+        {
+            var handler = InteractionBrowsersChanged;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
 	}
 }
