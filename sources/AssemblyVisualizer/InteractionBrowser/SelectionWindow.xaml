@@ -6,6 +6,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
+        ShowInTaskbar="False"
         x:Name="window">    
     <Window.Resources>
         <ResourceDictionary>
