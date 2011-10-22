@@ -16,6 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,7 +29,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -140,12 +140,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HAL\ILSpy\ShowAboutCommand.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="HAL\Helper.cs" />
     <Compile Include="HAL\ILSpy\BrowseInteractionsContextMenuEntry.cs" />
     <Compile Include="HAL\ILSpy\BrowseInteractionsToolbarCommand.cs" />
     <Compile Include="HAL\ILSpy\ModelHelper.cs" />
     <Compile Include="HAL\Reflector\ModelHelper.cs" />
+    <Compile Include="Infrastructure\GlobalServices.cs" />
     <Compile Include="InteractionBrowser\HierarchyViewModel.cs" />
     <Compile Include="InteractionBrowser\MemberGraph.cs" />
     <Compile Include="InteractionBrowser\InteractionBrowserWindow.xaml.cs">
@@ -393,6 +398,10 @@
     <Compile Include="WindowManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="About\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InteractionBrowser\InteractionBrowserWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -519,6 +528,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ib2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\portrait-120.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

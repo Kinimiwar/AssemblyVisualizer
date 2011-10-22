@@ -39,9 +39,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			Name,
 			DescendantsCount,
 			MembersCount
-		}
-
-		private const string HomePageUri = @"http://visualizer.denismarkelov.com";
+		}		
 
 		private string _searchTerm = string.Empty;
 		private bool _isSearchPerformed = true;
@@ -58,8 +56,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			: base(windowViewModel)
 		{
 			InitializeSearchTimer();
-
-			NavigateToHomePageCommand = new DelegateCommand(() => Process.Start(HomePageUri));
+			
             ClearSearchCommand = new DelegateCommand(ClearSearchCommandHandler);
 
 			InitializeSearchControl();
@@ -115,8 +112,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		#endregion
 
 		public event Action SearchFocusRequested;
-
-		public ICommand NavigateToHomePageCommand { get; private set; }
+		
         public ICommand ClearSearchCommand { get; private set; }
 
 		public bool IsSearchPerformed

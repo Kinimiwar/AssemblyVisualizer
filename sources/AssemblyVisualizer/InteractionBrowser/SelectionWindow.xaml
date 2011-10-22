@@ -20,7 +20,9 @@
         <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
     </Window.InputBindings>
     <Border BorderThickness="1"
-            BorderBrush="Gray">
+            BorderBrush="Gray"
+            x:Name="brd"
+            Opacity="0">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

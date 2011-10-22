@@ -383,22 +383,6 @@
             <ItemsControl 
                       ItemsSource="{Binding Assemblies}"
                       ItemTemplate="{StaticResource AssemblyTemplate}"/>
-        </ScrollViewer>
-
-        <!--Home page-->
-        <Border Margin="0, 6"
-                CornerRadius="6"
-                Background="White"
-                Grid.Row="1"                
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Center">
-            <TextBlock FontSize="12"
-                       Margin="4, 2">
-                <Hyperlink Style="{StaticResource HyperlinkStyle}"
-                           Command="{Binding NavigateToHomePageCommand}">
-                    <TextBlock Text="Home"/>
-                </Hyperlink>
-            </TextBlock>
-        </Border>
+        </ScrollViewer>        
     </Grid>
 </UserControl>

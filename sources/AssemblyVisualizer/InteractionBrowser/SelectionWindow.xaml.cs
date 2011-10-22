@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AssemblyVisualizer.Model;
+using System.Windows.Media.Animation;
 
 namespace AssemblyVisualizer.InteractionBrowser
 {    
@@ -26,6 +27,9 @@ namespace AssemblyVisualizer.InteractionBrowser
             DataContext = new SelectionWindowViewModel(types, drawGraph, this);
 
             WindowManager.InteractionBrowsersChanged += InteractionBrowsersChangedHandler;
+
+            var animation = new DoubleAnimation(1, new Duration(TimeSpan.FromSeconds(0.5)));
+            brd.BeginAnimation(OpacityProperty, animation);
         }
 
         public SelectionWindowViewModel ViewModel
@@ -43,7 +47,7 @@ namespace AssemblyVisualizer.InteractionBrowser
         private void InteractionBrowsersChangedHandler()
         {
             ViewModel.Refresh();
-        }
+        }        
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {

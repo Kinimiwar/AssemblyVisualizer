@@ -15,6 +15,7 @@ using AssemblyVisualizer.AssemblyBrowser;
 using AssemblyVisualizer.InteractionBrowser;
 using System.Windows;
 using System.Windows.Threading;
+using AssemblyVisualizer.About;
 
 namespace AssemblyVisualizer.HAL.Reflector
 {
@@ -37,6 +38,7 @@ namespace AssemblyVisualizer.HAL.Reflector
             _commandBarManager.CommandBars["Browser.TypeDeclaration"].Items.AddButton("Browse Ancestry", BrowseAncestryHandler);
             _commandBarManager.CommandBars["Browser.TypeDeclaration"].Items.AddButton("Browse Interactions", BrowseInteractionsHandler);
             _commandBarManager.CommandBars["Browser.TypeDeclaration"].Items.AddButton("Visualize Descendants", VisualizeDescendantsHandler);
+            _commandBarManager.CommandBars["Tools"].Items.AddButton("About Visualizer", ShowAboutHandler);
         }
 
         public static IAssemblyManager AssemblyManager
@@ -53,6 +55,13 @@ namespace AssemblyVisualizer.HAL.Reflector
             {
                 return _assemblyBrowser;
             }
+        }
+
+        private void ShowAboutHandler(object sender, EventArgs e)
+        {
+            var window = new AboutWindow();
+            System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(window);
+            window.Show();
         }
 
         private void BrowseAssemblyHandler(object sender, EventArgs e)

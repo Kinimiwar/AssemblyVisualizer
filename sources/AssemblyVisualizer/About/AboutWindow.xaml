@@ -1,0 +1,59 @@
+﻿<Window x:Class="AssemblyVisualizer.About.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About" 
+        Height="300" 
+        Width="300"        
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Common\ControlStylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" x:Name="escapeBinding"/>
+    </Window.InputBindings>
+    <Border Opacity="0"
+            x:Name="brd">        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image Source="../Images/portrait-120.png"
+                   Stretch="None"/>
+            <StackPanel HorizontalAlignment="Center"
+                        Grid.Row="1"
+                        Margin="0, 0, 0, 20">
+                <TextBlock Grid.Row="1"                   
+                       HorizontalAlignment="Center"
+                       FontSize="14">
+                    <TextBlock Text="Assembly Visualizer"/>
+                    <TextBlock x:Name="txtVersion"/>
+                </TextBlock>
+                <TextBlock Text="by Denis Markelov" 
+                           HorizontalAlignment="Center"
+                           FontSize="13"
+                           Margin="0, 3, 0, 0"/>
+                <TextBlock HorizontalAlignment="Center"
+                           Margin="0, 10, 0, 0">
+                    <Hyperlink Click="HyperlinkClickHandler"
+                               Style="{StaticResource HyperlinkStyle}">
+                        <TextBlock>Home Page</TextBlock>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>                      
+                     
+            <Button Grid.Row="2"
+                    Content="Close"
+                    Click="ButtonClickHandler"
+                    HorizontalAlignment="Center"
+                    MinWidth="60"
+                    Margin="4"/>
+        </Grid>
+    </Border>
+</Window>
