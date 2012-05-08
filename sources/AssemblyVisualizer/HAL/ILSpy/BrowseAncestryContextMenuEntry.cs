@@ -21,20 +21,20 @@ namespace AssemblyVisualizer.HAL.ILSpy
 	[ExportContextMenuEntry(Header = "Browse Ancestry")]
 	sealed class BrowseAncestryContextMenuEntry : IContextMenuEntry
 	{
-		public bool IsVisible(SharpTreeNode[] selectedNodes)
+        public bool IsVisible(TextViewContext context)
 		{
-			return (selectedNodes.Count() == 1) 
-				   && (selectedNodes.Single() is TypeTreeNode);
+			return (context.SelectedTreeNodes.Count() == 1) 
+				   && (context.SelectedTreeNodes.Single() is TypeTreeNode);
 		}
 
-		public bool IsEnabled(SharpTreeNode[] selectedNodes)
+        public bool IsEnabled(TextViewContext context)
 		{
 			return true;
 		}
 
-		public void Execute(SharpTreeNode[] selectedNodes)
+        public void Execute(TextViewContext context)
 		{
-			var typeDefinition = selectedNodes
+			var typeDefinition = context.SelectedTreeNodes
 				.OfType<TypeTreeNode>()
 				.Single().TypeDefinition;	
 			

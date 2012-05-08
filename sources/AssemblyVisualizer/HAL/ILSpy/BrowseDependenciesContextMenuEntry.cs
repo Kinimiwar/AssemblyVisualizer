@@ -22,19 +22,19 @@ namespace AssemblyVisualizer.HAL.ILSpy
     [ExportContextMenuEntry(Header = "Browse Dependencies")]
     sealed class BrowseDependenciesContextMenuEntry : IContextMenuEntry
     {
-        public bool IsVisible(SharpTreeNode[] selectedNodes)
+        public bool IsVisible(TextViewContext context)
         {
-            return selectedNodes.OfType<AssemblyTreeNode>().Count() > 0;                   
+            return context.SelectedTreeNodes.OfType<AssemblyTreeNode>().Count() > 0;                   
         }
 
-        public bool IsEnabled(SharpTreeNode[] selectedNodes)
+        public bool IsEnabled(TextViewContext context)
         {
             return true;
         }
 
-        public void Execute(SharpTreeNode[] selectedNodes)
+        public void Execute(TextViewContext context)
         {
-            var assemblyDefinitions = selectedNodes
+            var assemblyDefinitions = context.SelectedTreeNodes
                 .OfType<AssemblyTreeNode>()
                 .Select(n => n.LoadedAssembly.AssemblyDefinition);
 

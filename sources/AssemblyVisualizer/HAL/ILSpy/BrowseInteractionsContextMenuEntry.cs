@@ -18,24 +18,24 @@ namespace AssemblyVisualizer.HAL.ILSpy
     [ExportContextMenuEntry(Header = "Browse Interactions")]
     sealed class BrowseInteractionsContextMenuEntry : IContextMenuEntry
     {
-        public bool IsVisible(SharpTreeNode[] selectedNodes)
+        public void Execute(TextViewContext context)
         {
-            return (selectedNodes.All(n => n is TypeTreeNode));
-        }
-
-        public bool IsEnabled(SharpTreeNode[] selectedNodes)
-        {
-            return true;
-        }
-
-        public void Execute(SharpTreeNode[] selectedNodes)
-        {
-            var types = selectedNodes
+            var types = context.SelectedTreeNodes
                 .OfType<TypeTreeNode>()
                 .Select(n => HAL.Converter.Type(n.TypeDefinition))
                 .ToArray();
 
-            Services.BrowseInteractions(types, true);            
+            Services.BrowseInteractions(types, true);
+        }
+
+        public bool IsEnabled(TextViewContext context)
+        {
+            return true;
+        }
+
+        public bool IsVisible(TextViewContext context)
+        {
+            return (context.SelectedTreeNodes.All(n => n is TypeTreeNode));
         }
     }
 }

@@ -20,19 +20,19 @@ namespace AssemblyVisualizer.AssemblyBrowser
     [ExportContextMenuEntry(Header = "Browse Assembly")]
 	sealed class BrowseAssemblyContextMenuEntry : IContextMenuEntry
 	{
-		public bool IsVisible(SharpTreeNode[] selectedNodes)
+        public bool IsVisible(TextViewContext context)
 		{
-			return selectedNodes.All(n => n is AssemblyTreeNode);
+			return context.SelectedTreeNodes.All(n => n is AssemblyTreeNode);
 		}
 
-		public bool IsEnabled(SharpTreeNode[] selectedNodes)
+        public bool IsEnabled(TextViewContext context)
 		{
 			return true;
 		}
 
-		public void Execute(SharpTreeNode[] selectedNodes)
+        public void Execute(TextViewContext context)
 		{
-			var assemblyDefinitions = selectedNodes
+			var assemblyDefinitions = context.SelectedTreeNodes
 				.OfType<AssemblyTreeNode>()
 				.Select(n => Converter.Assembly(n.LoadedAssembly.AssemblyDefinition))
 				.ToList();

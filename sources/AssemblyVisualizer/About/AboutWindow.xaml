@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:ClassModifier="internal"
         Title="About" 
-        Height="300" 
+        Height="340" 
         Width="300"        
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        UseLayoutRounding="True">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,8 +26,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Source="../Images/portrait-120.png"
-                   Stretch="None"/>
+            <Image Source="../Images/1xp180.png"
+                   Stretch="Uniform"
+                   Width="180"
+                   Height="180"/>
             <StackPanel HorizontalAlignment="Center"
                         Grid.Row="1"
                         Margin="0, 0, 0, 20">
