@@ -24,6 +24,11 @@ namespace AssemblyVisualizer.HAL.ILSpy
     {
         public bool IsVisible(TextViewContext context)
         {
+            if (context.SelectedTreeNodes == null)
+            {
+                return false;
+            }
+
             return context.SelectedTreeNodes.OfType<AssemblyTreeNode>().Count() > 0;                   
         }
 

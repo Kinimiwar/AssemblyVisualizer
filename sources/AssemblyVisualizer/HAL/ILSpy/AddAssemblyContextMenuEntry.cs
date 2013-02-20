@@ -25,6 +25,10 @@ namespace AssemblyVisualizer.HAL.ILSpy
 			{
 				return false;
 			}
+            if (context.SelectedTreeNodes == null)
+            {
+                return false;
+            }
 
 			var window = WindowManager.AssemblyBrowsers.Single();
 			if (!window.ViewModel.Screen.AllowAssemblyDrop)

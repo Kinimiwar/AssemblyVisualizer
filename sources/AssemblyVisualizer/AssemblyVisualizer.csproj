@@ -71,7 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Reflector Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\Reflector\</OutputPath>
+    <OutputPath>C:\Program Files %28x86%29\Red Gate\.NET Reflector\Desktop 7.7\Addins\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Reflector</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -118,11 +118,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Reflector, Version=7.0.0.0, Culture=neutral, PublicKeyToken=18ca6bb8dd6a03c3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\build\Reflector\Reflector.exe</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -529,6 +524,9 @@
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\build\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Reflector">
+      <HintPath>C:\Program Files (x86)\Red Gate\.NET Reflector\Desktop 7.7\Reflector.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

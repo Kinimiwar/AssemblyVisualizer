@@ -22,6 +22,11 @@ namespace AssemblyVisualizer.AssemblyBrowser
 	{
         public bool IsVisible(TextViewContext context)
 		{
+            if (context.SelectedTreeNodes == null)
+            {
+                return false;
+            }
+
 			return context.SelectedTreeNodes.All(n => n is AssemblyTreeNode);
 		}
 
