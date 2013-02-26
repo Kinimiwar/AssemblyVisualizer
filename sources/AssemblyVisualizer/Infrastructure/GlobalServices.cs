@@ -12,7 +12,7 @@ namespace AssemblyVisualizer.Infrastructure
 {
     static class GlobalServices
     {
-        private const string HomePageUri = @"http://visualizer.denismarkelov.com";
+        private const string HomePageUri = @"http://manunt.github.com/AssemblyVisualizer";
 
         public static void NavigateToHomePage()
         {
