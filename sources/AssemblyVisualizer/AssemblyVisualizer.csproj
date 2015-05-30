@@ -506,9 +506,6 @@
     <Resource Include="Images\VirtualMethod.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\IB.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\ib2.png" />
   </ItemGroup>
   <ItemGroup>
