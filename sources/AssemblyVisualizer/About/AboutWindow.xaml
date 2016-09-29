@@ -37,15 +37,10 @@
                     <TextBlock Text="Assembly Visualizer"/>
                     <TextBlock x:Name="txtVersion"/>
                 </TextBlock>
-            <TextBlock HorizontalAlignment="Center"
-                           FontSize="13"
-                           Margin="0, 3, 0, 0">
-                    <Run>by</Run>
-                    <Hyperlink Click="AuthorClickHandler"
-                               Style="{StaticResource HyperlinkStyle}">
-                        <TextBlock>Denis Markelov</TextBlock>
-                    </Hyperlink>
-                </TextBlock>
+            <TextBlock Text="by Denis Markelov"
+                       HorizontalAlignment="Center"
+                       FontSize="13"
+                       Margin="0, 3, 0, 0" />                    
             <TextBlock Margin="0, 14, 0, 0" HorizontalAlignment="Center">
                     <Run>Get sources from </Run>
                     <Hyperlink Click="SourcesClickHandler"

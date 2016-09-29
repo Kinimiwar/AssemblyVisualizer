@@ -35,10 +35,5 @@ namespace AssemblyVisualizer.About
         {           
             GlobalServices.NavigateToSources();
         }
-
-        private void AuthorClickHandler(object sender, RoutedEventArgs e)
-        {
-            GlobalServices.NavigateToAuthor();
-        }
     }
 }
