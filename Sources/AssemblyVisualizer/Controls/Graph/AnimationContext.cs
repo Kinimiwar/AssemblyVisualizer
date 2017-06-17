@@ -4,13 +4,13 @@
 
 namespace AssemblyVisualizer.Controls.Graph
 {
-    public class AnimationContext : IAnimationContext
-    {
-        public GraphCanvas GraphCanvas { get; private set; }
+	public class AnimationContext : IAnimationContext
+	{
+		public AnimationContext(GraphCanvas canvas)
+		{
+			GraphCanvas = canvas;
+		}
 
-        public AnimationContext( GraphCanvas canvas )
-        {
-            GraphCanvas = canvas;
-        }
-    }
+		public GraphCanvas GraphCanvas { get; private set; }
+	}
 }

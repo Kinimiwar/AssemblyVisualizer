@@ -4,33 +4,33 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Diagnostics.Contracts;
+using System.Runtime.Serialization;
 using AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-    /// <summary>
-    /// A dictionary of vertices to a list of edges
-    /// </summary>
-    /// <typeparam name="TVertex"></typeparam>
-    /// <typeparam name="TEdge"></typeparam>
-    [ContractClass(typeof(IVertexEdgeDictionaryContract<,>))]
-    public interface IVertexEdgeDictionary<TVertex, TEdge>
-        : IDictionary<TVertex, IEdgeList<TVertex, TEdge>>
+	/// <summary>
+	///     A dictionary of vertices to a list of edges
+	/// </summary>
+	/// <typeparam name="TVertex"></typeparam>
+	/// <typeparam name="TEdge"></typeparam>
+	[ContractClass(typeof(IVertexEdgeDictionaryContract<,>))]
+	public interface IVertexEdgeDictionary<TVertex, TEdge>
+		: IDictionary<TVertex, IEdgeList<TVertex, TEdge>>
 #if !SILVERLIGHT
-        , ICloneable
-        , ISerializable
+			, ICloneable
+			, ISerializable
 #endif
-     where TEdge : IEdge<TVertex>
-    {
-        /// <summary>
-        /// Gets a clone of the dictionary. The vertices and edges are not cloned.
-        /// </summary>
-        /// <returns></returns>
+		where TEdge : IEdge<TVertex>
+	{
+		/// <summary>
+		///     Gets a clone of the dictionary. The vertices and edges are not cloned.
+		/// </summary>
+		/// <returns></returns>
 #if !SILVERLIGHT
-        new 
+		new
 #endif
-        IVertexEdgeDictionary<TVertex, TEdge> Clone();
-    }
+			IVertexEdgeDictionary<TVertex, TEdge> Clone();
+	}
 }

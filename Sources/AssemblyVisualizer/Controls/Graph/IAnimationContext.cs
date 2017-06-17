@@ -4,8 +4,8 @@
 
 namespace AssemblyVisualizer.Controls.Graph
 {
-    public interface IAnimationContext
-    {
-        GraphCanvas GraphCanvas { get; }
-    }
+	public interface IAnimationContext
+	{
+		GraphCanvas GraphCanvas { get; }
+	}
 }

@@ -10,23 +10,25 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-	public class ContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph> : IContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph>
+	public class ContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph> :
+		IContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph>
 		where TVertex : class
 		where TEdge : IEdge<TVertex>
 		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
 	{
-		private readonly string[] algorithmTypes = new[] { "DoubleTree", "BalloonTree" };
+		private readonly string[] algorithmTypes = {"DoubleTree", "BalloonTree"};
 
 		public IEnumerable<string> AlgorithmTypes
 		{
 			get { return algorithmTypes; }
 		}
 
-		public ILayoutAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm( string newAlgorithmType, ILayoutContext<TVertex, TEdge, TGraph> context, ILayoutParameters parameters )
+		public ILayoutAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm(string newAlgorithmType,
+			ILayoutContext<TVertex, TEdge, TGraph> context, ILayoutParameters parameters)
 		{
-		    var layoutContext = context as ContextualLayoutContext<TVertex, TEdge, TGraph>;
+			var layoutContext = context as ContextualLayoutContext<TVertex, TEdge, TGraph>;
 
-			switch ( newAlgorithmType )
+			switch (newAlgorithmType)
 			{
 				/*case "DoubleTree":
 					return new DoubleTreeLayoutAlgorithm<TVertex, TEdge, TGraph>( layoutContext.Graph, layoutContext.Positions, layoutContext.Sizes, parameters as DoubleTreeLayoutParameters, layoutContext.SelectedVertex );
@@ -37,9 +39,9 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 			}
 		}
 
-		public ILayoutParameters CreateParameters( string algorithmType, ILayoutParameters oldParameters )
+		public ILayoutParameters CreateParameters(string algorithmType, ILayoutParameters oldParameters)
 		{
-			switch ( algorithmType )
+			switch (algorithmType)
 			{
 				/*case "DoubleTree":
 					return !( oldParameters is DoubleTreeLayoutParameters ) ? new DoubleTreeLayoutParameters() : (DoubleTreeLayoutParameters)( oldParameters as DoubleTreeLayoutParameters ).Clone();
@@ -50,28 +52,28 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 			}
 		}
 
-		public string GetAlgorithmType( ILayoutAlgorithm<TVertex, TEdge, TGraph> algorithm )
+		public string GetAlgorithmType(ILayoutAlgorithm<TVertex, TEdge, TGraph> algorithm)
 		{
 			/*if ( algorithm is DoubleTreeLayoutAlgorithm<TVertex, TEdge, TGraph> )
 				return "DoubleTree";
 		
             if ( algorithm is BalloonTreeLayoutAlgorithm<TVertex, TEdge, TGraph> )
 		        return "BalloonTree";*/
-		    
-            return string.Empty;
+
+			return string.Empty;
 		}
 
-		public bool IsValidAlgorithm( string algorithmType )
+		public bool IsValidAlgorithm(string algorithmType)
 		{
-			return ( AlgorithmTypes.Contains( algorithmType ) );
+			return AlgorithmTypes.Contains(algorithmType);
 		}
 
-		public bool NeedEdgeRouting( string algorithmType )
+		public bool NeedEdgeRouting(string algorithmType)
 		{
 			return true;
 		}
 
-		public bool NeedOverlapRemoval( string algorithmType )
+		public bool NeedOverlapRemoval(string algorithmType)
 		{
 			return false;
 		}

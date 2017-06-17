@@ -7,17 +7,17 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 	public enum LayoutMode
 	{
 		/// <summary>
-		/// Decide about the layout mode automatically.
+		///     Decide about the layout mode automatically.
 		/// </summary>
 		Automatic,
 
 		/// <summary>
-		/// Simple layout mode without compound vertices.
+		///     Simple layout mode without compound vertices.
 		/// </summary>
 		Simple,
 
 		/// <summary>
-		/// Compound vertices, compound graph.
+		///     Compound vertices, compound graph.
 		/// </summary>
 		Compound
 	}

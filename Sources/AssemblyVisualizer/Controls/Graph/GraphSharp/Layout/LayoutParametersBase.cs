@@ -12,7 +12,7 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 
 		public object Clone()
 		{
-			return this.MemberwiseClone();
+			return MemberwiseClone();
 		}
 
 		#endregion
@@ -27,6 +27,7 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+
 		#endregion
 	}
 }

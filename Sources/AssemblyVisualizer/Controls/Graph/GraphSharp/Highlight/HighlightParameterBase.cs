@@ -21,10 +21,10 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		protected void OnPropertyChanged( string propertyName )
+		protected void OnPropertyChanged(string propertyName)
 		{
-			if ( PropertyChanged != null )
-				PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#endregion

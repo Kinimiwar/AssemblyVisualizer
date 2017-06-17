@@ -6,6 +6,6 @@ using System.Diagnostics.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-    [Pure]
-    public delegate bool VertexPredicate<TVertex>(TVertex v);
+	[Pure]
+	public delegate bool VertexPredicate<TVertex>(TVertex v);
 }

@@ -8,35 +8,38 @@ using System.Collections.Generic;
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
 #if !SILVERLIGHT
-    [Serializable]
+	[Serializable]
 #endif
-    public sealed class VertexList<TVertex>
-        : List<TVertex>
+	public sealed class VertexList<TVertex>
+		: List<TVertex>
 #if !SILVERLIGHT
-        , ICloneable
+			, ICloneable
 #endif
-    {
-        public VertexList()
-        { }
+	{
+		public VertexList()
+		{
+		}
 
-        public VertexList(int capacity)
-            : base(capacity)
-        { }
+		public VertexList(int capacity)
+			: base(capacity)
+		{
+		}
 
-        public VertexList(VertexList<TVertex> other)
-            : base(other)
-        { }
-
-        public VertexList<TVertex> Clone()
-        {
-            return new VertexList<TVertex>(this);
-        }
+		public VertexList(VertexList<TVertex> other)
+			: base(other)
+		{
+		}
 
 #if !SILVERLIGHT
-        object ICloneable.Clone()
-        {
-            return this.Clone();
-        }
+		object ICloneable.Clone()
+		{
+			return Clone();
+		}
 #endif
-    }
+
+		public VertexList<TVertex> Clone()
+		{
+			return new VertexList<TVertex>(this);
+		}
+	}
 }

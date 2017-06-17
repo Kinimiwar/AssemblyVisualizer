@@ -7,22 +7,22 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-    public interface ILayoutInfoIterationEventArgs<TVertex, TEdge>
-        : ILayoutIterationEventArgs<TVertex>
-        where TVertex : class
-        where TEdge : IEdge<TVertex>
-    {
-        object GetVertexInfo(TVertex vertex);
+	public interface ILayoutInfoIterationEventArgs<TVertex, TEdge>
+		: ILayoutIterationEventArgs<TVertex>
+		where TVertex : class
+		where TEdge : IEdge<TVertex>
+	{
+		object GetVertexInfo(TVertex vertex);
 
-        object GetEdgeInfo(TEdge edge);
-    }
+		object GetEdgeInfo(TEdge edge);
+	}
 
-    public interface ILayoutInfoIterationEventArgs<TVertex, TEdge, TVertexInfo, TEdgeInfo>
-        : ILayoutInfoIterationEventArgs<TVertex, TEdge>
-        where TVertex : class
-        where TEdge : IEdge<TVertex>
-    {
-        IDictionary<TVertex, TVertexInfo> VertexInfos { get; }
-        IDictionary<TEdge, TEdgeInfo> EdgeInfos { get; }
-    }
+	public interface ILayoutInfoIterationEventArgs<TVertex, TEdge, TVertexInfo, TEdgeInfo>
+		: ILayoutInfoIterationEventArgs<TVertex, TEdge>
+		where TVertex : class
+		where TEdge : IEdge<TVertex>
+	{
+		IDictionary<TVertex, TVertexInfo> VertexInfos { get; }
+		IDictionary<TEdge, TEdgeInfo> EdgeInfos { get; }
+	}
 }

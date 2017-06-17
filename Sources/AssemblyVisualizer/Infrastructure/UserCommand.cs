@@ -3,14 +3,11 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
 
 namespace AssemblyVisualizer.Infrastructure
 {
-	class UserCommand : ViewModelBase
+	internal class UserCommand : ViewModelBase
 	{
 		private string _text;
 
@@ -33,6 +30,7 @@ namespace AssemblyVisualizer.Infrastructure
 				OnPropertyChanged("Text");
 			}
 		}
+
 		public ICommand Command { get; set; }
 	}
 }

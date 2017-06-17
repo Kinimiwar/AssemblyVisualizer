@@ -7,31 +7,33 @@ using System.Windows;
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 {
 	/// <summary>
-	/// A System.Windows.Rect egy struktúra, ezért a heap-en tárolódik. Bizonyos esetekben ez nem
-	/// szerencsés, így szükség van erre a wrapper osztályra. Mivel ez class, ezért nem
-	/// érték szerinti átadás van.
+	///     A System.Windows.Rect egy struktúra, ezért a heap-en tárolódik. Bizonyos esetekben ez nem
+	///     szerencsés, így szükség van erre a wrapper osztályra. Mivel ez class, ezért nem
+	///     érték szerinti átadás van.
 	/// </summary>
 	public class RectangleWrapper<TObject>
 		where TObject : class
 	{
 		private readonly TObject id;
-		public TObject Id
-		{
-			get { return id; }
-		}
 
 		public Rect Rectangle;
 
 		/// <summary>
-		/// 
 		/// </summary>
 		/// <param name="rectangle"></param>
-		/// <param name="id">Az adott téglalap azonosítója (az overlap-removal végén tudnunk kell, hogy 
-		/// melyik téglalap melyik objektumhoz tartozik. Az azonosítás megoldható lesz id alapján.</param>
-		public RectangleWrapper( Rect rectangle, TObject id )
+		/// <param name="id">
+		///     Az adott téglalap azonosítója (az overlap-removal végén tudnunk kell, hogy
+		///     melyik téglalap melyik objektumhoz tartozik. Az azonosítás megoldható lesz id alapján.
+		/// </param>
+		public RectangleWrapper(Rect rectangle, TObject id)
 		{
 			Rectangle = rectangle;
 			this.id = id;
+		}
+
+		public TObject Id
+		{
+			get { return id; }
 		}
 
 		public double CenterX
@@ -46,7 +48,7 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 
 		public Point Center
 		{
-			get { return new Point( CenterX, CenterY ); }
+			get { return new Point(CenterX, CenterY); }
 		}
 	}
 }

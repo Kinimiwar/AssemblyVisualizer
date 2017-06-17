@@ -8,18 +8,18 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-    [ContractClass(typeof(IComputationContract))]
-    public interface IComputation
-    {
-        object SyncRoot { get; }
-        ComputationState State { get; }
+	[ContractClass(typeof(IComputationContract))]
+	public interface IComputation
+	{
+		object SyncRoot { get; }
+		ComputationState State { get; }
 
-        void Compute();
-        void Abort();
+		void Compute();
+		void Abort();
 
-        event EventHandler StateChanged;
-        event EventHandler Started;
-        event EventHandler Finished;
-        event EventHandler Aborted;
-    }
+		event EventHandler StateChanged;
+		event EventHandler Started;
+		event EventHandler Finished;
+		event EventHandler Aborted;
+	}
 }

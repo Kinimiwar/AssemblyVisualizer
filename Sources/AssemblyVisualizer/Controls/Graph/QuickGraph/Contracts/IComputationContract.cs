@@ -7,63 +7,64 @@ using System.Diagnostics.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts
 {
-    [ContractClassFor(typeof(IComputation))]
-    abstract class IComputationContract
-        : IComputation
-    {
-        #region IComputation Members
-        object IComputation.SyncRoot
-        {
-            get
-            {
-                Contract.Ensures(Contract.Result<object>() != null);
-                return null;
-            }
-        }
+	[ContractClassFor(typeof(IComputation))]
+	internal abstract class IComputationContract
+		: IComputation
+	{
+		#region IComputation Members
 
-        ComputationState IComputation.State
-        {
-            get 
-            {
-                Contract.Ensures(Enum.IsDefined(typeof(ComputationState), Contract.Result<ComputationState>()));
+		object IComputation.SyncRoot
+		{
+			get
+			{
+				Contract.Ensures(Contract.Result<object>() != null);
+				return null;
+			}
+		}
 
-                return default(ComputationState);
-            }
-        }
+		ComputationState IComputation.State
+		{
+			get
+			{
+				Contract.Ensures(Enum.IsDefined(typeof(ComputationState), Contract.Result<ComputationState>()));
 
-        void IComputation.Compute()
-        {
-            // todo contracts on events
-        }
+				return default(ComputationState);
+			}
+		}
 
-        void IComputation.Abort()
-        {
-        }
+		void IComputation.Compute()
+		{
+			// todo contracts on events
+		}
 
-        event EventHandler IComputation.StateChanged
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
+		void IComputation.Abort()
+		{
+		}
 
-        event EventHandler IComputation.Started
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
+		event EventHandler IComputation.StateChanged
+		{
+			add { throw new NotImplementedException(); }
+			remove { throw new NotImplementedException(); }
+		}
 
-        event EventHandler IComputation.Finished
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
+		event EventHandler IComputation.Started
+		{
+			add { throw new NotImplementedException(); }
+			remove { throw new NotImplementedException(); }
+		}
 
-        event EventHandler IComputation.Aborted
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
-        }
+		event EventHandler IComputation.Finished
+		{
+			add { throw new NotImplementedException(); }
+			remove { throw new NotImplementedException(); }
+		}
 
-        #endregion
-    }
+		event EventHandler IComputation.Aborted
+		{
+			add { throw new NotImplementedException(); }
+			remove { throw new NotImplementedException(); }
+		}
+
+		#endregion
+	}
 }

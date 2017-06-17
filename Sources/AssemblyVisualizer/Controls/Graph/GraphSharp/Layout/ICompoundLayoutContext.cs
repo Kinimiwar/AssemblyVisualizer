@@ -3,16 +3,16 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using AssemblyVisualizer.Controls.Graph.QuickGraph;
 using System.Windows;
+using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-    public interface ICompoundLayoutContext<TVertex, TEdge, TGraph> : ILayoutContext<TVertex, TEdge, TGraph>
-        where TEdge : IEdge<TVertex>
+	public interface ICompoundLayoutContext<TVertex, TEdge, TGraph> : ILayoutContext<TVertex, TEdge, TGraph>
+		where TEdge : IEdge<TVertex>
 		where TGraph : IBidirectionalGraph<TVertex, TEdge>
-    {        
-        IDictionary<TVertex, Thickness> VertexBorders { get; }
-        IDictionary<TVertex, CompoundVertexInnerLayoutType> LayoutTypes { get; }
-    }
+	{
+		IDictionary<TVertex, Thickness> VertexBorders { get; }
+		IDictionary<TVertex, CompoundVertexInnerLayoutType> LayoutTypes { get; }
+	}
 }

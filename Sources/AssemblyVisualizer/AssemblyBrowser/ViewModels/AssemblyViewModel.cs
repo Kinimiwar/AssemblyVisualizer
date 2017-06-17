@@ -3,29 +3,28 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using System.Windows.Input;
 using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
 using AssemblyVisualizer.Infrastructure;
-
 using AssemblyVisualizer.Model;
 
 namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 {
-	class AssemblyViewModel : ViewModelBase
+	internal class AssemblyViewModel : ViewModelBase
 	{
 		private static readonly Brush DefaultForeground = new SolidColorBrush(Color.FromRgb(85, 85, 85));
 
 		private readonly AssemblyInfo _assemblyInfo;
-		private readonly AssemblyBrowserWindowViewModel _windowViewModel;
 		private readonly int _exportedTypesCount;
 		private readonly int _internalTypesCount;
-		private bool _showRemoveCommand = true;
+		private readonly AssemblyBrowserWindowViewModel _windowViewModel;
 		private Brush _foreground;
-        private bool _isSelected;
-		
-		public AssemblyViewModel(AssemblyInfo assemblyInfo, 
-								 AssemblyBrowserWindowViewModel windowViewModel)
+		private bool _isSelected;
+		private bool _showRemoveCommand = true;
+
+		public AssemblyViewModel(AssemblyInfo assemblyInfo,
+			AssemblyBrowserWindowViewModel windowViewModel)
 		{
 			_assemblyInfo = assemblyInfo;
 			_windowViewModel = windowViewModel;
@@ -33,7 +32,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			var types = _assemblyInfo.Modules
 				.SelectMany(m => m.Types);
 			_exportedTypesCount = assemblyInfo.ExportedTypesCount;
-            _internalTypesCount = assemblyInfo.InternalTypesCount;
+			_internalTypesCount = assemblyInfo.InternalTypesCount;
 
 			RemoveCommand = new DelegateCommand(RemoveCommandHandler);
 
@@ -50,24 +49,21 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			get { return _assemblyInfo.FullName; }
 		}
 
-        public string Version
-        {
-            get { return _assemblyInfo.Version.ToString(); }
-        }
+		public string Version
+		{
+			get { return _assemblyInfo.Version.ToString(); }
+		}
 
-        public bool IsSelected
-        {
-            get
-            {
-                return _isSelected;
-            }
-            set
-            {
-                _isSelected = value;
-                OnPropertyChanged("IsSelected");
-                _windowViewModel.NotifyAssemblySelectionChanged();
-            }
-        }
+		public bool IsSelected
+		{
+			get { return _isSelected; }
+			set
+			{
+				_isSelected = value;
+				OnPropertyChanged("IsSelected");
+				_windowViewModel.NotifyAssemblySelectionChanged();
+			}
+		}
 
 		public Brush Foreground
 		{
@@ -121,7 +117,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 				type.RefreshBackground();
 			}
 		}
-		
+
 		public void Decolorize()
 		{
 			AssignedForeground = null;
@@ -138,10 +134,8 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		{
 			var brush = DefaultForeground;
 			if (AssignedForeground != null)
-			{
 				brush = AssignedForeground;
-			}
-			
+
 			Foreground = brush;
 		}
 

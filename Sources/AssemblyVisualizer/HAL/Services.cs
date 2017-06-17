@@ -2,97 +2,92 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AssemblyVisualizer.AssemblyBrowser;
-using AssemblyVisualizer.Model;
-using System.Windows;
-using AssemblyVisualizer.InteractionBrowser;
-using AssemblyVisualizer.AncestryBrowser;
-
 #if Reflector
 using AssemblyVisualizer.HAL.Reflector;
 using Reflector.CodeModel;
 #endif
-
+using System.Collections.Generic;
+using AssemblyVisualizer.AncestryBrowser;
+using AssemblyVisualizer.AssemblyBrowser;
+using AssemblyVisualizer.InteractionBrowser;
+using AssemblyVisualizer.Model;
 #if ILSpy
 using ICSharpCode.ILSpy;
 using Mono.Cecil;
+
 #endif
 
 namespace AssemblyVisualizer.HAL
 {
-    class Services
-    { 
-        public static void BrowseAssemblies(IEnumerable<AssemblyInfo> assemblies)
-        {
-            var window = new AssemblyBrowserWindow(assemblies);
+	internal class Services
+	{
+		public static void BrowseAssemblies(IEnumerable<AssemblyInfo> assemblies)
+		{
+			var window = new AssemblyBrowserWindow(assemblies);
 #if ILSpy
-            window.Owner = MainWindow;
+			window.Owner = MainWindow;
 #elif Reflector
             System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(window);
 #endif
-            window.Show();
-        }
+			window.Show();
+		}
 
-        public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph)
-        {
-            BrowseInteractions(types, drawGraph, false);
-        }
+		public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph)
+		{
+			BrowseInteractions(types, drawGraph, false);
+		}
 
-        public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph, bool passSelection)
-        {
-            if (WindowManager.InteractionBrowsers.Count > 0 && !passSelection)
-            {
-                var selectionWindow = new SelectionWindow(types, drawGraph);
+		public static void BrowseInteractions(IEnumerable<TypeInfo> types, bool drawGraph, bool passSelection)
+		{
+			if (WindowManager.InteractionBrowsers.Count > 0 && !passSelection)
+			{
+				var selectionWindow = new SelectionWindow(types, drawGraph);
 #if ILSpy
-                selectionWindow.Owner = MainWindow;
+				selectionWindow.Owner = MainWindow;
 #elif Reflector
                 System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(selectionWindow);
 #endif
-                selectionWindow.Show();
-                return;
-            }
+				selectionWindow.Show();
+				return;
+			}
 
-            var window = new InteractionBrowserWindow(types, drawGraph);
+			var window = new InteractionBrowserWindow(types, drawGraph);
 #if ILSpy
-            window.Owner = MainWindow;
+			window.Owner = MainWindow;
 #elif Reflector
             System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(window);
 #endif
-            window.Show();
-        }
+			window.Show();
+		}
 
-        public static void BrowseAncestry(TypeInfo type)
-        {
-            var window = new AncestryBrowserWindow(type);
+		public static void BrowseAncestry(TypeInfo type)
+		{
+			var window = new AncestryBrowserWindow(type);
 #if ILSpy
-            window.Owner = MainWindow;
+			window.Owner = MainWindow;
 #elif Reflector
             System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(window);
 #endif
-            window.Show();
-        }
+			window.Show();
+		}
 
-        public static void JumpTo(object memberReference)
-        {
+		public static void JumpTo(object memberReference)
+		{
 #if ILSpy
-            MainWindow.JumpToReference(memberReference);
+			MainWindow.JumpToReference(memberReference);
 #endif
 #if Reflector
             Package.AssemblyBrowser.ActiveItem = memberReference;
 #endif
-        }
+		}
 
-        public static bool MethodsMatch(MethodInfo method1, MethodInfo method2)
-        { 
+		public static bool MethodsMatch(MethodInfo method1, MethodInfo method2)
+		{
 #if ILSpy
-            var md1 = method1.MemberReference as MethodDefinition;
-            var md2 = method2.MemberReference as MethodDefinition;
+			var md1 = method1.MemberReference as MethodDefinition;
+			var md2 = method2.MemberReference as MethodDefinition;
 
-            return md1.Name == md2.Name && ParametersMatch(md1, md2);
+			return md1.Name == md2.Name && ParametersMatch(md1, md2);
 #elif Reflector
             var md1 = method1.MemberReference as IMethodDeclaration;
             var md2 = method2.MemberReference as IMethodDeclaration;            
@@ -104,34 +99,25 @@ namespace AssemblyVisualizer.HAL
             return false;
 
 #endif
-        }
+		}
 
 #if ILSpy
 
-        public static MainWindow MainWindow
-        {
-            get
-            {
-                return MainWindow.Instance;
-            }
-        }
+		public static MainWindow MainWindow
+		{
+			get { return MainWindow.Instance; }
+		}
 
-        private static bool ParametersMatch(MethodDefinition method1, MethodDefinition method2)
-        {
-            if (method1.Parameters.Count != method2.Parameters.Count)
-            {
-                return false;
-            }
+		private static bool ParametersMatch(MethodDefinition method1, MethodDefinition method2)
+		{
+			if (method1.Parameters.Count != method2.Parameters.Count)
+				return false;
 
-            for (int i = 0; i < method1.Parameters.Count; i++)
-            {
-                if (method1.Parameters[i].ParameterType.FullName != method2.Parameters[i].ParameterType.FullName)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+			for (var i = 0; i < method1.Parameters.Count; i++)
+				if (method1.Parameters[i].ParameterType.FullName != method2.Parameters[i].ParameterType.FullName)
+					return false;
+			return true;
+		}
 #endif
 
 #if Reflector
@@ -154,5 +140,5 @@ namespace AssemblyVisualizer.HAL
         }
 
 #endif
-    }
+	}
 }

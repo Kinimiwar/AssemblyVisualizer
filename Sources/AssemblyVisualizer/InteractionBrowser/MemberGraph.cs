@@ -3,36 +3,31 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using System.Collections.Generic;
-using System.Windows;
-using AssemblyVisualizer.Controls.Graph;
-using AssemblyVisualizer.Controls.Graph.GraphSharp.Layout;
-using AssemblyVisualizer.Controls.Graph.QuickGraph;
 using AssemblyVisualizer.Common;
+using AssemblyVisualizer.Controls.Graph;
+using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.InteractionBrowser
 {
-    class MemberGraph : BidirectionalGraph<MemberViewModel, Edge<MemberViewModel>>
-    {
-        public MemberGraph(bool allowParallelEdges)
-            : base(allowParallelEdges)
-        {
-        }
-    }
+	internal class MemberGraph : BidirectionalGraph<MemberViewModel, Edge<MemberViewModel>>
+	{
+		public MemberGraph(bool allowParallelEdges)
+			: base(allowParallelEdges)
+		{
+		}
+	}
 
-    class MemberGraphLayout : GraphLayout<MemberViewModel, Edge<MemberViewModel>, MemberGraph>
-    {
-        public event Action LayoutFinished;
+	internal class MemberGraphLayout : GraphLayout<MemberViewModel, Edge<MemberViewModel>, MemberGraph>
+	{
+		public event Action LayoutFinished;
 
-        protected override void OnLayoutFinished()
-        {
-            base.OnLayoutFinished();
+		protected override void OnLayoutFinished()
+		{
+			base.OnLayoutFinished();
 
-            var handler = LayoutFinished;
-            if (handler != null)
-            {
-                handler();
-            }
-        }
-    }
+			var handler = LayoutFinished;
+			if (handler != null)
+				handler();
+		}
+	}
 }

@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using AssemblyVisualizer.Behaviors;
 // Copyright 2011 Denis Markelov
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using AssemblyVisualizer.Behaviors;
-
 namespace AssemblyVisualizer.AssemblyBrowser.Screens
 {
 	/// <summary>
-	/// Interaction logic for SearchScreenView.xaml
+	///     Interaction logic for SearchScreenView.xaml
 	/// </summary>
 	internal partial class SearchScreenView : UserControl
 	{
@@ -30,7 +19,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		{
 			InitializeComponent();
 			Loaded += LoadedHandler;
-            Unloaded += UnloadedHandler;
+			Unloaded += UnloadedHandler;
 		}
 
 		private SearchScreen ViewModel
@@ -40,36 +29,36 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 
 		private void LoadedHandler(object sender, RoutedEventArgs e)
 		{
-            if (ViewModel == null)
-            {
-                DataContextChanged += SearchScreenView_DataContextChanged;
-            }
-            else
-            {
-                if (!_isInitialized)
-                {
-                    ViewModel.SearchFocusRequested += SearchFocusRequestedHandler;
-                    _isInitialized = true;
-                }
-            }            
-            txtSearch.Focus();
-            txtClearSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
+			if (ViewModel == null)
+			{
+				DataContextChanged += SearchScreenView_DataContextChanged;
+			}
+			else
+			{
+				if (!_isInitialized)
+				{
+					ViewModel.SearchFocusRequested += SearchFocusRequestedHandler;
+					_isInitialized = true;
+				}
+			}
+			txtSearch.Focus();
+			txtClearSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
 		}
 
-        private void UnloadedHandler(object sender, RoutedEventArgs e)
-        {
-            txtClearSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
-        }            
+		private void UnloadedHandler(object sender, RoutedEventArgs e)
+		{
+			txtClearSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
+		}
 
-        private void SearchScreenView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (!_isInitialized)
-            {
-                ViewModel.SearchFocusRequested += SearchFocusRequestedHandler;
+		private void SearchScreenView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (!_isInitialized)
+			{
+				ViewModel.SearchFocusRequested += SearchFocusRequestedHandler;
 
-                _isInitialized = true;
-            }
-        }
+				_isInitialized = true;
+			}
+		}
 
 		private void SearchFocusRequestedHandler()
 		{
@@ -82,16 +71,16 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			{
 				txtSearch.Text = string.Empty;
 			}
-			else if (e.Key == Key.Right && ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control))
+			else if (e.Key == Key.Right && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
 			{
 				NavigationCommands.BrowseForward.Execute(null, this);
 				e.Handled = true;
 			}
-			else if (e.Key == Key.Left && ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control))
+			else if (e.Key == Key.Left && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
 			{
 				NavigationCommands.BrowseBack.Execute(null, this);
 				e.Handled = true;
 			}
-		}        
-    }
+		}
+	}
 }

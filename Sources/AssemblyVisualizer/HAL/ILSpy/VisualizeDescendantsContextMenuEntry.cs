@@ -4,53 +4,45 @@
 
 #if ILSpy
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows;
+using AssemblyVisualizer.AssemblyBrowser;
 using ICSharpCode.ILSpy;
 using ICSharpCode.ILSpy.TreeNodes;
-using ICSharpCode.TreeView;
-using AssemblyVisualizer.Properties;
-using AssemblyVisualizer.Model;
-using AssemblyVisualizer.AssemblyBrowser;
 
 namespace AssemblyVisualizer.HAL.ILSpy
 {
-    [ExportContextMenuEntry(Header = "Visualize Descendants")]
-    sealed class VisualizeDescendantsContextMenuEntry : IContextMenuEntry
-    {
-        public bool IsVisible(TextViewContext context)
-        {
-            if (context.SelectedTreeNodes == null)
-            {
-                return false;
-            }
+	[ExportContextMenuEntry(Header = "Visualize Descendants")]
+	internal sealed class VisualizeDescendantsContextMenuEntry : IContextMenuEntry
+	{
+		public bool IsVisible(TextViewContext context)
+		{
+			if (context.SelectedTreeNodes == null)
+				return false;
 
-            return (context.SelectedTreeNodes.Count() == 1)
-                   && (context.SelectedTreeNodes.Single() is TypeTreeNode);
-        }
+			return context.SelectedTreeNodes.Count() == 1
+			       && context.SelectedTreeNodes.Single() is TypeTreeNode;
+		}
 
-        public bool IsEnabled(TextViewContext context)
-        {
-            return true;
-        }
+		public bool IsEnabled(TextViewContext context)
+		{
+			return true;
+		}
 
-        public void Execute(TextViewContext context)
-        {
-            var typeDefinition = context.SelectedTreeNodes
-                .OfType<TypeTreeNode>()
-                .Single().TypeDefinition;
-            var type = HAL.Converter.Type(typeDefinition);
-            var assembly = type.Module.Assembly;
+		public void Execute(TextViewContext context)
+		{
+			var typeDefinition = context.SelectedTreeNodes
+				.OfType<TypeTreeNode>()
+				.Single().TypeDefinition;
+			var type = HAL.Converter.Type(typeDefinition);
+			var assembly = type.Module.Assembly;
 
-            var window = new AssemblyBrowserWindow(new [] { assembly }, type)
-            {
-                Owner = MainWindow.Instance
-            };
-            window.Show();
-        }
-    }    
+			var window = new AssemblyBrowserWindow(new[] {assembly}, type)
+			{
+				Owner = MainWindow.Instance
+			};
+			window.Show();
+		}
+	}
 }
+
 #endif

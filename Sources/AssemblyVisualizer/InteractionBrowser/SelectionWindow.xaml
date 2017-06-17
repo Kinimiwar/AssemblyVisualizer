@@ -1,23 +1,23 @@
 ﻿<Window x:Class="AssemblyVisualizer.InteractionBrowser.SelectionWindow"
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
         ShowInTaskbar="False"
-        x:Name="window">    
+        x:Name="window">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>                
-                <ResourceDictionary Source="..\Common\ImagesDictionary.xaml"/>
-                <ResourceDictionary Source="..\Common\ControlStylesDictionary.xaml"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Common\ImagesDictionary.xaml" />
+                <ResourceDictionary Source="..\Common\ControlStylesDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
+        <KeyBinding Key="Escape" Command="{Binding CancelCommand}" />
     </Window.InputBindings>
     <Border BorderThickness="1"
             BorderBrush="Gray"
@@ -25,14 +25,14 @@
             Opacity="0">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <TextBlock Foreground="Gray"
                        FontSize="24"
                        Text="Select window to use"
                        Margin="6, 6, 6, 0"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center" />
             <ScrollViewer HorizontalAlignment="Center"
                           Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
@@ -41,19 +41,19 @@
                 <ItemsControl ItemsSource="{Binding Thumbnails}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>                
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Command="{Binding SelectCommand}"
                                     Background="Transparent">
                                 <Button.Template>
-                                    <ControlTemplate TargetType="{x:Type ButtonBase}">                                
+                                    <ControlTemplate TargetType="{x:Type ButtonBase}">
                                         <ContentPresenter VerticalAlignment="Center" />
                                     </ControlTemplate>
                                 </Button.Template>
-                                <Border Width="{Binding DataContext.PieceWidth, ElementName=window}" 
+                                <Border Width="{Binding DataContext.PieceWidth, ElementName=window}"
                                         Height="{Binding DataContext.PieceHeight, ElementName=window}"
                                         BorderBrush="Gray"
                                         Background="White"
@@ -61,33 +61,33 @@
                                         Margin="5"
                                         x:Name="brd"
                                         Cursor="Hand">
-                                    <Grid>                                
+                                    <Grid>
                                         <Border x:Name="brdBrush"
                                                 ToolTip="{Binding Tooltip}">
                                             <Border.Background>
-                                                <VisualBrush Visual="{Binding Thumbnail}" 
-                                                             Stretch="UniformToFill"/>
+                                                <VisualBrush Visual="{Binding Thumbnail}"
+                                                             Stretch="UniformToFill" />
                                             </Border.Background>
                                         </Border>
                                         <TextBlock x:Name="txtNewWindow"
-                                                   Text="New window" 
+                                                   Text="New window"
                                                    FontSize="24"
                                                    Foreground="Gray"
                                                    Visibility="Collapsed"
                                                    VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"/>
+                                                   HorizontalAlignment="Center" />
                                     </Grid>
                                 </Border>
                             </Button>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsNewWindow}" Value="True">
-                                    <Setter TargetName="brdBrush" Property="Visibility" Value="Collapsed"/>
-                                    <Setter TargetName="txtNewWindow" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="brdBrush" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="txtNewWindow" Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="brd" Property="Effect">
                                         <Setter.Value>
-                                            <DropShadowEffect/>
+                                            <DropShadowEffect />
                                         </Setter.Value>
                                     </Setter>
                                 </Trigger>

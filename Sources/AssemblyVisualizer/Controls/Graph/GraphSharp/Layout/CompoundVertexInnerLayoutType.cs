@@ -4,11 +4,11 @@
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-    public enum CompoundVertexInnerLayoutType
-    {
-        Automatic,
-        ContextFree,
-        Contextual,
-        Fixed
-    }
+	public enum CompoundVertexInnerLayoutType
+	{
+		Automatic,
+		ContextFree,
+		Contextual,
+		Fixed
+	}
 }

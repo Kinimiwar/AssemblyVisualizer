@@ -2,102 +2,91 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows.Input;
 using AssemblyVisualizer.Infrastructure;
 using AssemblyVisualizer.Model;
-using System.Windows.Input;
 
 namespace AssemblyVisualizer.DependencyBrowser
 {
-    class AssemblyViewModel : ViewModelBase
-    {
-        private static Dictionary<AssemblyInfo, AssemblyViewModel> _correspondence = new Dictionary<AssemblyInfo, AssemblyViewModel>();
+	internal class AssemblyViewModel : ViewModelBase
+	{
+		private static readonly Dictionary<AssemblyInfo, AssemblyViewModel> _correspondence =
+			new Dictionary<AssemblyInfo, AssemblyViewModel>();
 
-        private AssemblyInfo _assembly;
-        private IList<AssemblyViewModel> _referencedAssemblies = new List<AssemblyViewModel>();
-        private bool _isSelected;
-        private bool _isFound;
-        
-        private AssemblyViewModel(AssemblyInfo assembly)
-        {
-            _assembly = assembly;
-            _correspondence.Add(assembly, this);
-            foreach (var assemblyInfo in _assembly.ReferencedAssemblies)
-            {
-                _referencedAssemblies.Add(Create(assemblyInfo));
-            }
+		private bool _isFound;
+		private bool _isSelected;
+		private readonly IList<AssemblyViewModel> _referencedAssemblies = new List<AssemblyViewModel>();
 
-            ToggleSelectionCommand = new DelegateCommand(ToggleSelectionCommandHandler);
-        }
+		private AssemblyViewModel(AssemblyInfo assembly)
+		{
+			AssemblyInfo = assembly;
+			_correspondence.Add(assembly, this);
+			foreach (var assemblyInfo in AssemblyInfo.ReferencedAssemblies)
+				_referencedAssemblies.Add(Create(assemblyInfo));
 
-        public ICommand ToggleSelectionCommand { get; private set; }
+			ToggleSelectionCommand = new DelegateCommand(ToggleSelectionCommandHandler);
+		}
 
-        public bool IsProcessed { get; set; }
-        public bool IsMarked { get; set; }
-        public bool IsRemoved { get; set; }
-        public bool IsRoot { get; set; }
-        public string Name { get { return _assembly.Name; } }        
-        public string FullName { get { return _assembly.FullName; } }
+		public ICommand ToggleSelectionCommand { get; private set; }
 
-        public bool IsSelected
-        {
-            get
-            {
-                return _isSelected;
-            }
-            set
-            {
-                _isSelected = value;
-                OnPropertyChanged("IsSelected");
-            }
-        }
+		public bool IsProcessed { get; set; }
+		public bool IsMarked { get; set; }
+		public bool IsRemoved { get; set; }
+		public bool IsRoot { get; set; }
 
-        public bool IsFound
-        {
-            get
-            {
-                return _isFound;
-            }
-            set
-            {
-                _isFound = value;
-                OnPropertyChanged("IsFound");
-            }
-        }
+		public string Name
+		{
+			get { return AssemblyInfo.Name; }
+		}
 
-        public IEnumerable<AssemblyViewModel> ReferencedAssemblies
-        {
-            get
-            {
-                return _referencedAssemblies;
-            }
-        }
+		public string FullName
+		{
+			get { return AssemblyInfo.FullName; }
+		}
 
-        public AssemblyInfo AssemblyInfo
-        {
-            get { return _assembly; }
-        }
+		public bool IsSelected
+		{
+			get { return _isSelected; }
+			set
+			{
+				_isSelected = value;
+				OnPropertyChanged("IsSelected");
+			}
+		}
 
-        public static AssemblyViewModel Create(AssemblyInfo assemblyInfo)
-        {
-            if (_correspondence.ContainsKey(assemblyInfo))
-            {
-                return _correspondence[assemblyInfo];
-            }
-            return new AssemblyViewModel(assemblyInfo); 
-        }
+		public bool IsFound
+		{
+			get { return _isFound; }
+			set
+			{
+				_isFound = value;
+				OnPropertyChanged("IsFound");
+			}
+		}
 
-        public static void ClearCache()
-        {
-            _correspondence.Clear();
-        }
+		public IEnumerable<AssemblyViewModel> ReferencedAssemblies
+		{
+			get { return _referencedAssemblies; }
+		}
 
-        private void ToggleSelectionCommandHandler()
-        {
-            IsSelected = !IsSelected;
-        }
-    }
+		public AssemblyInfo AssemblyInfo { get; private set; }
+
+		public static AssemblyViewModel Create(AssemblyInfo assemblyInfo)
+		{
+			if (_correspondence.ContainsKey(assemblyInfo))
+				return _correspondence[assemblyInfo];
+			return new AssemblyViewModel(assemblyInfo);
+		}
+
+		public static void ClearCache()
+		{
+			_correspondence.Clear();
+		}
+
+		private void ToggleSelectionCommandHandler()
+		{
+			IsSelected = !IsSelected;
+		}
+	}
 }

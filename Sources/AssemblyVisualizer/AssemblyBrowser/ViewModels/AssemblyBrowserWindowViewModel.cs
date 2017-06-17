@@ -2,27 +2,24 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
-using AssemblyVisualizer.Infrastructure;
-
-using System.Windows.Threading;
 using System.Windows.Input;
+using System.Windows.Threading;
 using AssemblyVisualizer.AssemblyBrowser.Screens;
 using AssemblyVisualizer.Common;
-using AssemblyVisualizer.Properties;
+using AssemblyVisualizer.Infrastructure;
 using AssemblyVisualizer.Model;
+using AssemblyVisualizer.Properties;
 
 namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 {
-	class AssemblyBrowserWindowViewModel : ViewModelBase
+	internal class AssemblyBrowserWindowViewModel : ViewModelBase
 	{
 		#region // Nested types
 
-		class NavigationItem
+		private class NavigationItem
 		{
 			public NavigationItem(Screen screen)
 			{
@@ -47,9 +44,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 				get
 				{
 					if (IsScreen)
-					{
-                        return Resources.Search;
-					}
+						return Resources.Search;
 					return Type.FullName;
 				}
 			}
@@ -74,45 +69,44 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		#region // .ctor
 
-        public AssemblyBrowserWindowViewModel(IEnumerable<AssemblyInfo> assemblyDefinitions,
-                                              Dispatcher dispatcher)
-            : this(assemblyDefinitions, null, dispatcher)
-        { 
-        }        
+		public AssemblyBrowserWindowViewModel(IEnumerable<AssemblyInfo> assemblyDefinitions,
+			Dispatcher dispatcher)
+			: this(assemblyDefinitions, null, dispatcher)
+		{
+		}
 
 		public AssemblyBrowserWindowViewModel(IEnumerable<AssemblyInfo> assemblyDefinitions,
-                                              TypeInfo type,
-											  Dispatcher dispatcher)
+			TypeInfo type,
+			Dispatcher dispatcher)
 		{
 			_dispatcher = dispatcher;
 
 			_assemblies = new ObservableCollection<AssemblyViewModel>(
-								assemblyDefinitions.Select(a => new AssemblyViewModel(a, this)));		
+				assemblyDefinitions.Select(a => new AssemblyViewModel(a, this)));
 
 			OnAssembliesChanged();
 
-            
 
 			NavigateBackCommand = new DelegateCommand(NavigateBackCommandHandler);
 			NavigateForwardCommand = new DelegateCommand(NavigateForwardCommandHandler);
 			ShowInnerSearchCommand = new DelegateCommand(ShowInnerSearchCommandHandler);
-            ToggleAssembliesCommand = new DelegateCommand(ToggleAssembliesCommandHandler);
+			ToggleAssembliesCommand = new DelegateCommand(ToggleAssembliesCommandHandler);
 
-			RefreshNavigationCommands();			
+			RefreshNavigationCommands();
 
 			IsColorized = true;
 
-            _searchScreen = new SearchScreen(this);
+			_searchScreen = new SearchScreen(this);
 
-            if (type == null)
-            {
-                Screen = _searchScreen;
-            }
-            else
-            { 
-                var typeViewModel = Types.Single(t => t.TypeInfo == type);
-                CurrentNavigationItem = new NavigationItem(typeViewModel);
-            }
+			if (type == null)
+			{
+				Screen = _searchScreen;
+			}
+			else
+			{
+				var typeViewModel = Types.Single(t => t.TypeInfo == type);
+				CurrentNavigationItem = new NavigationItem(typeViewModel);
+			}
 		}
 
 		#endregion
@@ -122,7 +116,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		public ICommand NavigateBackCommand { get; private set; }
 		public ICommand NavigateForwardCommand { get; private set; }
 		public ICommand ShowInnerSearchCommand { get; private set; }
-        public ICommand ToggleAssembliesCommand { get; private set; }
+		public ICommand ToggleAssembliesCommand { get; private set; }
 
 		public Screen Screen
 		{
@@ -145,19 +139,17 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			get
 			{
 				if (_allTypeInfo == null)
-				{
 					_allTypeInfo = _assemblies
 						.Select(a => a.AssemblyInfo)
 						.SelectMany(a => a.Modules)
 						.SelectMany(m => m.Types)
 						.ToList();
-				}
 				return _allTypeInfo;
 			}
 		}
 
 		public bool IsColorized
-		{	
+		{
 			get { return _isColorized; }
 			set
 			{
@@ -168,7 +160,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		public string Title
 		{
-            get { return Resources.AssemblyBrowser; }
+			get { return Resources.AssemblyBrowser; }
 		}
 
 		public bool ShowNavigationArrows
@@ -191,9 +183,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			get
 			{
 				if (!CanNavigateForward)
-				{
 					return Resources.CannotNavigateForward;
-				}
 				return _nextNavigationItems.Peek().Hint;
 			}
 		}
@@ -203,9 +193,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			get
 			{
 				if (!CanNavigateBack)
-				{
-                    return Resources.CannotNavigateBack;
-				}
+					return Resources.CannotNavigateBack;
 				return _previousNavigationItems.Peek().Hint;
 			}
 		}
@@ -222,14 +210,14 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 					{
 						var currentAssembly = assembly;
 
-                        var typeDefinitions = currentAssembly.AssemblyInfo.Modules
-                            .SelectMany(m => m.Types).ToArray();
-                        var distinctTypeDefinitions = typeDefinitions.Distinct().ToArray();
+						var typeDefinitions = currentAssembly.AssemblyInfo.Modules
+							.SelectMany(m => m.Types).ToArray();
+						var distinctTypeDefinitions = typeDefinitions.Distinct().ToArray();
 
 						var assemblyTypes = distinctTypeDefinitions
 							.Select(t => new TypeViewModel(t, currentAssembly, this))
 							.ToList();
-						
+
 						currentAssembly.Types = assemblyTypes;
 						types.AddRange(assemblyTypes);
 					}
@@ -240,17 +228,15 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			}
 		}
 
-        public IEnumerable<TypeViewModel> TypesForSearch
-        {
-            get
-            { 
-                if (!Assemblies.Any(a => a.IsSelected))
-                {
-                    return Types;
-                }
-                return Types.Where(t => t.AssemblyViewModel.IsSelected);
-            }
-        }
+		public IEnumerable<TypeViewModel> TypesForSearch
+		{
+			get
+			{
+				if (!Assemblies.Any(a => a.IsSelected))
+					return Types;
+				return Types.Where(t => t.AssemblyViewModel.IsSelected);
+			}
+		}
 
 		public Dispatcher Dispatcher
 		{
@@ -276,9 +262,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			set
 			{
 				foreach (var assembly in Assemblies)
-				{
 					assembly.ShowRemoveCommand = value;
-				}
 			}
 		}
 
@@ -288,9 +272,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			{
 				var graphScreen = Screen as GraphScreen;
 				if (graphScreen != null)
-				{
 					return new NavigationItem(graphScreen.Type);
-				}
 				return new NavigationItem(Screen);
 			}
 			set
@@ -299,19 +281,19 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 				if (graphScreen != null && value.IsScreen)
 				{
 					graphScreen.ClearSearch();
-                    graphScreen.Type.IsCurrent = false;
+					graphScreen.Type.IsCurrent = false;
 				}
 
 				if (value.IsScreen)
-				{                    
+				{
 					Screen = value.Screen;
 				}
 				else
 				{
-                    bool adjustExpansion = false;
+					var adjustExpansion = false;
 					if (graphScreen == null)
 					{
-                        adjustExpansion = true;
+						adjustExpansion = true;
 						graphScreen = new GraphScreen(this);
 						Screen = graphScreen;
 					}
@@ -344,14 +326,10 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		{
 			var newAssemblies = assemblies.Except(_assemblies.Select(a => a.AssemblyInfo));
 			if (newAssemblies.Count() == 0)
-			{
 				return;
-			}
 
 			foreach (var assembly in newAssemblies)
-			{
 				_assemblies.Add(new AssemblyViewModel(assembly, this));
-			}
 
 			OnAssembliesChanged();
 		}
@@ -359,9 +337,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		public void AddAssembly(AssemblyInfo assemblyDefinition)
 		{
 			if (_assemblies.Any(vm => vm.AssemblyInfo == assemblyDefinition))
-			{
 				return;
-			}
 
 			_assemblies.Add(new AssemblyViewModel(assemblyDefinition, this));
 
@@ -379,13 +355,11 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			}
 		}
 
-        public void NotifyAssemblySelectionChanged()
-        {
-            if (_searchScreen != null)
-            {
-                _searchScreen.NotifyAssemblySelectionChanged();
-            }
-        }
+		public void NotifyAssemblySelectionChanged()
+		{
+			if (_searchScreen != null)
+				_searchScreen.NotifyAssemblySelectionChanged();
+		}
 
 		#endregion
 
@@ -394,10 +368,8 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		private void OnAssembliesChanged()
 		{
 			UpdateInternalTypeCollections();
-            if (_searchScreen != null)
-            {
-                _searchScreen.NotifyAssembliesChanged();
-            }
+			if (_searchScreen != null)
+				_searchScreen.NotifyAssembliesChanged();
 			RefreshColorization();
 			CleanUpNavigationHistory();
 		}
@@ -414,24 +386,18 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			{
 				var baseType = typeDefinition.BaseType;
 				if (baseType != null && typesDictionary.ContainsKey(baseType))
-				{
 					typesDictionary[baseType].AddDerivedType(
 						typesDictionary[typeDefinition]);
-				}
 			}
 
 			foreach (var type in Types)
-			{
 				type.CountDescendants();
-			}
 		}
 
 		private void Navigate(NavigationItem item)
 		{
 			if (Screen != null)
-			{
 				_previousNavigationItems.Push(CurrentNavigationItem);
-			}
 
 			CurrentNavigationItem = item;
 			_nextNavigationItems.Clear();
@@ -451,24 +417,20 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		{
 			if (IsColorized)
 			{
-				int currentIndex = 0;
+				var currentIndex = 0;
 				foreach (var assembly in Assemblies)
 				{
 					assembly.Colorize(
-                        BrushProvider.BrushPairs[currentIndex].Caption, BrushProvider.BrushPairs[currentIndex].Background);
+						BrushProvider.BrushPairs[currentIndex].Caption, BrushProvider.BrushPairs[currentIndex].Background);
 					currentIndex++;
-                    if (currentIndex == BrushProvider.BrushPairs.Count)
-					{
+					if (currentIndex == BrushProvider.BrushPairs.Count)
 						currentIndex = 0;
-					}
 				}
 			}
 			else
 			{
 				foreach (var assembly in Assemblies)
-				{
 					assembly.Decolorize();
-				}
 			}
 		}
 
@@ -485,9 +447,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			var stack = new Stack<NavigationItem>();
 
 			while (navigationStack.Count > 0)
-			{
 				stack.Push(navigationStack.Pop());
-			}
 			while (stack.Count > 0)
 			{
 				var item = stack.Pop();
@@ -498,9 +458,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 				}
 				var sameType = Types.SingleOrDefault(t => t.TypeInfo == item.Type.TypeInfo);
 				if (sameType != null)
-				{
 					navigationStack.Push(new NavigationItem(sameType));
-				}
 			}
 		}
 
@@ -511,9 +469,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		private void NavigateBackCommandHandler()
 		{
 			if (_previousNavigationItems.Count == 0)
-			{
 				return;
-			}
 			_nextNavigationItems.Push(CurrentNavigationItem);
 			CurrentNavigationItem = _previousNavigationItems.Pop();
 
@@ -523,10 +479,8 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		private void NavigateForwardCommandHandler()
 		{
 			if (_nextNavigationItems.Count == 0)
-			{
 				return;
-			}
-			
+
 			_previousNavigationItems.Push(CurrentNavigationItem);
 			CurrentNavigationItem = _nextNavigationItems.Pop();
 
@@ -536,15 +490,13 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		private void ShowInnerSearchCommandHandler()
 		{
 			if (Screen != null)
-			{
 				Screen.ShowInnerSearch();
-			}
 		}
 
-        private void ToggleAssembliesCommandHandler()
-        {
-            Screen.ToggleAssembliesVisibility();
-        }
+		private void ToggleAssembliesCommandHandler()
+		{
+			Screen.ToggleAssembliesVisibility();
+		}
 
 		#endregion
 	}

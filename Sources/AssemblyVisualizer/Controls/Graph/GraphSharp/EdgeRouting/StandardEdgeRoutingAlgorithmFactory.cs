@@ -9,36 +9,38 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.EdgeRouting
 {
-	public class StandardEdgeRoutingAlgorithmFactory<TVertex, TEdge, TGraph> : IEdgeRoutingAlgorithmFactory<TVertex, TEdge, TGraph>
+	public class StandardEdgeRoutingAlgorithmFactory<TVertex, TEdge, TGraph> :
+		IEdgeRoutingAlgorithmFactory<TVertex, TEdge, TGraph>
 		where TVertex : class
 		where TEdge : IEdge<TVertex>
 		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
 	{
-		protected static readonly string[] algorithmTypes = new string[] { };
+		protected static readonly string[] algorithmTypes = {};
+
 		public IEnumerable<string> AlgorithmTypes
 		{
 			get { return algorithmTypes; }
 		}
 
-		public IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm( string newAlgorithmType, ILayoutContext<TVertex, TEdge, TGraph> context, IEdgeRoutingParameters parameters )
+		public IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm(string newAlgorithmType,
+			ILayoutContext<TVertex, TEdge, TGraph> context, IEdgeRoutingParameters parameters)
 		{
 			return null;
 		}
 
-		public IEdgeRoutingParameters CreateParameters( string algorithmType, IEdgeRoutingParameters oldParameters )
+		public IEdgeRoutingParameters CreateParameters(string algorithmType, IEdgeRoutingParameters oldParameters)
 		{
 			return null;
 		}
 
-		public bool IsValidAlgorithm( string algorithmType )
+		public bool IsValidAlgorithm(string algorithmType)
 		{
-			return AlgorithmTypes.Any( at => at == algorithmType );
+			return AlgorithmTypes.Any(at => at == algorithmType);
 		}
 
-		public string GetAlgorithmType( IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> algorithm )
+		public string GetAlgorithmType(IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> algorithm)
 		{
 			return string.Empty;
 		}
-
 	}
 }

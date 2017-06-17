@@ -6,15 +6,15 @@ using System.Windows;
 
 namespace AssemblyVisualizer.Controls.Graph
 {
-	interface ICompoundVertexControl
+	internal interface ICompoundVertexControl
 	{
 		/// <summary>
-		/// Gets the 'borderthickness' of the control around the inner canvas.
+		///     Gets the 'borderthickness' of the control around the inner canvas.
 		/// </summary>
 		Thickness VertexBorderThickness { get; }
 
 		/// <summary>
-		/// Gets the size of the inner canvas.
+		///     Gets the size of the inner canvas.
 		/// </summary>
 		Size InnerCanvasSize { get; }
 

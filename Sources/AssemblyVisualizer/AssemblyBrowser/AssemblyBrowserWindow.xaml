@@ -1,105 +1,106 @@
 ﻿<Window x:Class="AssemblyVisualizer.AssemblyBrowser.AssemblyBrowserWindow"
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"         
-        xmlns:UserControls="clr-namespace:AssemblyVisualizer.AssemblyBrowser.UserControls" 
-        xmlns:Screens="clr-namespace:AssemblyVisualizer.AssemblyBrowser.Screens" 
-        Title="{Binding Title}" 
-        Height="600" 
-        Width="800" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:UserControls="clr-namespace:AssemblyVisualizer.AssemblyBrowser.UserControls"
+        xmlns:Screens="clr-namespace:AssemblyVisualizer.AssemblyBrowser.Screens"
+        Title="{Binding Title}"
+        Height="600"
+        Width="800"
         MinWidth="800"
         MinHeight="500"
         Drop="WindowDrop"
         AllowDrop="{Binding Screen.AllowAssemblyDrop}">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>                
-                <ResourceDictionary Source="..\Common\ControlStylesDictionary.xaml"/>
-                <ResourceDictionary Source="..\Common\ImagesDictionary.xaml"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Common\ControlStylesDictionary.xaml" />
+                <ResourceDictionary Source="..\Common\ImagesDictionary.xaml" />
 
-                <ResourceDictionary Source="/PresentationFramework.Aero, Version=3.0.0.0,
+                <ResourceDictionary
+                    Source="/PresentationFramework.Aero, Version=3.0.0.0,
                                             Culture=neutral, PublicKeyToken=31bf3856ad364e35,
                                             ProcessorArchitecture=MSIL;component/themes/aero.normalcolor.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        </ResourceDictionary>    
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </ResourceDictionary>
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Command="NavigationCommands.BrowseBack" Key="Left" Modifiers="Control"/>
-        <KeyBinding Command="NavigationCommands.BrowseForward" Key="Right" Modifiers="Control"/>
-        <KeyBinding Command="{Binding ShowInnerSearchCommand}" Key="F" Modifiers="Control"/>        
-        <KeyBinding Command="{Binding ToggleAssembliesCommand}" Key="A" Modifiers="Control"/>       
+        <KeyBinding Command="NavigationCommands.BrowseBack" Key="Left" Modifiers="Control" />
+        <KeyBinding Command="NavigationCommands.BrowseForward" Key="Right" Modifiers="Control" />
+        <KeyBinding Command="{Binding ShowInnerSearchCommand}" Key="F" Modifiers="Control" />
+        <KeyBinding Command="{Binding ToggleAssembliesCommand}" Key="A" Modifiers="Control" />
     </Window.InputBindings>
     <Window.CommandBindings>
-        <CommandBinding Command="Search" Executed="SearchExecuted"/>
+        <CommandBinding Command="Search" Executed="SearchExecuted" />
     </Window.CommandBindings>
     <Grid UseLayoutRounding="True"
-          TextOptions.TextFormattingMode="Display">      
+          TextOptions.TextFormattingMode="Display">
 
-        <!--Content-->  
+        <!--Content-->
         <UserControls:ScreenPresenter Screen="{Binding Screen}"
-                                             Grid.Row="1">
+                                      Grid.Row="1">
             <UserControls:ScreenPresenter.SearchView>
-                <Screens:SearchScreenView DataContext="{Binding SearchScreen}"/>
+                <Screens:SearchScreenView DataContext="{Binding SearchScreen}" />
             </UserControls:ScreenPresenter.SearchView>
-        </UserControls:ScreenPresenter>        
-        
+        </UserControls:ScreenPresenter>
+
         <!--Navigation arrows-->
         <Grid Visibility="{Binding ShowNavigationArrows, Converter={StaticResource BooleanToVisibilityConverter}}"
               VerticalAlignment="Top"
               HorizontalAlignment="Left"
               Margin="18">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Button Width="42"
-                    Height="42"                    
+                    Height="42"
                     Margin="0, 0, 8, 0"
                     Command="{Binding NavigateBackCommand}">
                 <Button.ToolTip>
                     <TextBlock>
-                        <TextBlock Text="{Binding NavigateBackHint}"/>
-                        <LineBreak/>
+                        <TextBlock Text="{Binding NavigateBackHint}" />
+                        <LineBreak />
                         <TextBlock Text="CTRL + Left"
-                                   FontWeight="Bold"/>
+                                   FontWeight="Bold" />
                     </TextBlock>
                 </Button.ToolTip>
                 <Button.Style>
                     <Style BasedOn="{StaticResource ImageButtonStyle}"
                            TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="{StaticResource LeftArrowDrawing}"/>
+                        <Setter Property="Background" Value="{StaticResource LeftArrowDrawing}" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding CanNavigateBack}" Value="False">
-                                <Setter Property="Background" Value="{StaticResource LeftGrayArrowDrawing}"/>
-                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="Background" Value="{StaticResource LeftGrayArrowDrawing}" />
+                                <Setter Property="IsEnabled" Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-            </Button>                                
-            
+            </Button>
+
             <Button Width="42"
                     Height="42"
-                    Grid.Column="1"                    
+                    Grid.Column="1"
                     Command="{Binding NavigateForwardCommand}">
                 <Button.ToolTip>
                     <TextBlock>
-                        <TextBlock Text="{Binding NavigateForwardHint}"/>
-                        <LineBreak/>
+                        <TextBlock Text="{Binding NavigateForwardHint}" />
+                        <LineBreak />
                         <TextBlock Text="CTRL + Right"
-                                   FontWeight="Bold"/>
+                                   FontWeight="Bold" />
                     </TextBlock>
                 </Button.ToolTip>
                 <Button.Style>
                     <Style BasedOn="{StaticResource ImageButtonStyle}"
                            TargetType="{x:Type Button}">
-                        <Setter Property="Background" Value="{StaticResource RightArrowDrawing}"/>
+                        <Setter Property="Background" Value="{StaticResource RightArrowDrawing}" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding CanNavigateForward}" Value="False">
-                                <Setter Property="Background" Value="{StaticResource RightGrayArrowDrawing}"/>
-                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="Background" Value="{StaticResource RightGrayArrowDrawing}" />
+                                <Setter Property="IsEnabled" Value="False" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

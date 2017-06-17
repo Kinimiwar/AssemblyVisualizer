@@ -2,41 +2,41 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System;
 using AssemblyVisualizer.Controls.Graph.Helpers;
 
 namespace AssemblyVisualizer.Controls.Graph
 {
 	/// <summary>
-	/// Logical representation of a vertex.
+	///     Logical representation of a vertex.
 	/// </summary>
 	public class VertexControl : Control, IPoolObject, IDisposable
 	{
-		public object Vertex
-		{
-			get { return GetValue( VertexProperty ); }
-			set { SetValue( VertexProperty, value ); }
-		}
-
 		public static readonly DependencyProperty VertexProperty =
-			DependencyProperty.Register( "Vertex", typeof( object ), typeof( VertexControl ), new UIPropertyMetadata( null ) );
+			DependencyProperty.Register("Vertex", typeof(object), typeof(VertexControl), new UIPropertyMetadata(null));
 
-
-        public GraphCanvas RootCanvas
-        {
-            get { return (GraphCanvas)GetValue(RootCanvasProperty); }
-            set { SetValue(RootCanvasProperty, value); }
-        }
-
-        public static readonly DependencyProperty RootCanvasProperty =
-            DependencyProperty.Register("RootCanvas", typeof(GraphCanvas), typeof(VertexControl), new UIPropertyMetadata(null));
+		public static readonly DependencyProperty RootCanvasProperty =
+			DependencyProperty.Register("RootCanvas", typeof(GraphCanvas), typeof(VertexControl), new UIPropertyMetadata(null));
 
 		static VertexControl()
 		{
 			//override the StyleKey Property
-			DefaultStyleKeyProperty.OverrideMetadata( typeof( VertexControl ), new FrameworkPropertyMetadata( typeof( VertexControl ) ) );
+			DefaultStyleKeyProperty.OverrideMetadata(typeof(VertexControl), new FrameworkPropertyMetadata(typeof(VertexControl)));
+		}
+
+		public object Vertex
+		{
+			get { return GetValue(VertexProperty); }
+			set { SetValue(VertexProperty, value); }
+		}
+
+
+		public GraphCanvas RootCanvas
+		{
+			get { return (GraphCanvas) GetValue(RootCanvasProperty); }
+			set { SetValue(RootCanvasProperty, value); }
 		}
 
 		#region IPoolObject Members
@@ -55,8 +55,8 @@ namespace AssemblyVisualizer.Controls.Graph
 
 		public void Dispose()
 		{
-			if ( Disposing != null )
-				Disposing( this );
+			if (Disposing != null)
+				Disposing(this);
 		}
 
 		#endregion

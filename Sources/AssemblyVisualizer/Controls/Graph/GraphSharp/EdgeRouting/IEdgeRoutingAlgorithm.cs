@@ -3,8 +3,8 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using AssemblyVisualizer.Controls.Graph.QuickGraph;
 using System.Windows;
+using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.EdgeRouting
 {

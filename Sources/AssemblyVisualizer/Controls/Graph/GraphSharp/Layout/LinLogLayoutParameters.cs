@@ -8,6 +8,12 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 	{
 		internal double attractionExponent = 1.0;
 
+		internal double gravitationMultiplier = 0.1;
+
+		internal int iterationCount = 100;
+
+		internal double repulsiveExponent;
+
 		public double AttractionExponent
 		{
 			get { return attractionExponent; }
@@ -17,8 +23,6 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 				NotifyPropertyChanged("AttractionExponent");
 			}
 		}
-
-		internal double repulsiveExponent;
 
 		public double RepulsiveExponent
 		{
@@ -30,8 +34,6 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 			}
 		}
 
-		internal double gravitationMultiplier = 0.1;
-
 		public double GravitationMultiplier
 		{
 			get { return gravitationMultiplier; }
@@ -41,8 +43,6 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 				NotifyPropertyChanged("GravitationMultiplier");
 			}
 		}
-
-		internal int iterationCount = 100;
 
 		public int IterationCount
 		{

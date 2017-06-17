@@ -3,87 +3,84 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using AssemblyVisualizer.Infrastructure;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using AssemblyVisualizer.AssemblyBrowser.Screens;
 using AssemblyVisualizer.Common;
-using System.Windows.Media;
-using AssemblyVisualizer.AncestryBrowser;
-using AssemblyVisualizer.Properties;
-using AssemblyVisualizer.Model;
 using AssemblyVisualizer.HAL;
-using System.Windows;
-using AssemblyVisualizer.InteractionBrowser;
+using AssemblyVisualizer.Infrastructure;
+using AssemblyVisualizer.Model;
+using AssemblyVisualizer.Properties;
 
 namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 {
-	class TypeViewModel : ViewModelBase
+	internal class TypeViewModel : ViewModelBase
 	{
 		private static readonly Brush InternalBackground = new SolidColorBrush(Color.FromRgb(222, 222, 222));
 		private static readonly Brush DefaultBackground = Brushes.White;
 		private static readonly Brush GraphRootBackground = Brushes.Yellow;
+		private readonly AssemblyViewModel _assemblyViewModel;
+		private readonly string _baseTypeFullName;
+		private readonly string _baseTypeName;
+		private readonly IList<TypeViewModel> _derivedTypes = new List<TypeViewModel>();
+		private readonly string _extendedInfo;
+		private readonly string _fullName;
+		private readonly bool _isBaseTypeAvailable = true;
+		private readonly int _membersCount;
+		private readonly string _name;
 
 		private readonly TypeInfo _typeInfo;
-		private readonly IList<TypeViewModel> _derivedTypes = new List<TypeViewModel>();
-
-		private int _descendantsCount;
-		private int _directDescendantsCount;
-		private readonly int _membersCount;        
-		
-		private bool _showMembers;
-		private bool _isCurrent;
-		private bool _isMarked;
-        private bool _isExpanded = true;        
-		private readonly bool _isBaseTypeAvailable = true;
-		private readonly string _name;
-		private readonly string _fullName;
-		private readonly string _baseTypeName;
-		private readonly string _baseTypeFullName;
-		private readonly string _extendedInfo;
-		private Brush _background;
 
 		private readonly AssemblyBrowserWindowViewModel _windowViewModel;
-        private readonly AssemblyViewModel _assemblyViewModel;
+		private Brush _background;
 
-		public TypeViewModel(TypeInfo typeInfo, AssemblyViewModel assemblyViewModel, AssemblyBrowserWindowViewModel windowViewModel)
+		private bool _isCurrent;
+		private bool _isExpanded = true;
+		private bool _isMarked;
+
+		private bool _showMembers;
+
+		public TypeViewModel(TypeInfo typeInfo, AssemblyViewModel assemblyViewModel,
+			AssemblyBrowserWindowViewModel windowViewModel)
 		{
 			_typeInfo = typeInfo;
 			_windowViewModel = windowViewModel;
-            _assemblyViewModel = assemblyViewModel;
+			_assemblyViewModel = assemblyViewModel;
 
-            _name = typeInfo.Name;
-            _fullName = typeInfo.FullName;
+			_name = typeInfo.Name;
+			_fullName = typeInfo.FullName;
 			_extendedInfo = IsInternal
-			                	? string.Format("{0}\n{1}", FullName, Resources.Internal)
-			                	: FullName;
-            if (_typeInfo.IsEnum)
-            {
-                var enumValues = _typeInfo.Fields.Where(f => f.Name != "value__").Select(f => f.Name);
-                if (enumValues.Count() > 0)
-                {
-                    var values = string.Join("\n", _typeInfo.Fields.Where(f => f.Name != "value__").Select(f => f.Name));
-                    _extendedInfo = string.Format("{0}\n\n{1}", _extendedInfo, values);
-                }
-            }
-            else if (_typeInfo.IsInterface)
-            {
-                var members = _typeInfo.Events.Select(m => m.Text)
-                    .Concat(_typeInfo.Properties.Select(p => p.Text))
-                    .Concat(_typeInfo.Methods.Select(p => p.Text));
-                if (members.Count() > 0)
-                {
-                    var values = string.Join("\n", members);
-                    _extendedInfo = string.Format("{0}\n\n{1}", _extendedInfo, values);
-                }
-            }
+				? string.Format("{0}\n{1}", FullName, Resources.Internal)
+				: FullName;
+			if (_typeInfo.IsEnum)
+			{
+				var enumValues = _typeInfo.Fields.Where(f => f.Name != "value__").Select(f => f.Name);
+				if (enumValues.Count() > 0)
+				{
+					var values = string.Join("\n", _typeInfo.Fields.Where(f => f.Name != "value__").Select(f => f.Name));
+					_extendedInfo = string.Format("{0}\n\n{1}", _extendedInfo, values);
+				}
+			}
+			else if (_typeInfo.IsInterface)
+			{
+				var members = _typeInfo.Events.Select(m => m.Text)
+					.Concat(_typeInfo.Properties.Select(p => p.Text))
+					.Concat(_typeInfo.Methods.Select(p => p.Text));
+				if (members.Count() > 0)
+				{
+					var values = string.Join("\n", members);
+					_extendedInfo = string.Format("{0}\n\n{1}", _extendedInfo, values);
+				}
+			}
 
 			if (HasBaseType)
 			{
-                var baseType = _typeInfo.BaseType;
+				var baseType = _typeInfo.BaseType;
 
-                _baseTypeName = baseType.Name;
-                _baseTypeFullName = baseType.FullName;
+				_baseTypeName = baseType.Name;
+				_baseTypeFullName = baseType.FullName;
 				if (baseType == null)
 				{
 					_baseTypeFullName = _baseTypeFullName + "\n" + Resources.NotAvailable;
@@ -107,109 +104,97 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 				.OfType<MemberViewModel>();
 
 			Members = properties.Concat(events).Concat(methods);
-            _membersCount = typeInfo.MembersCount;
+			_membersCount = typeInfo.MembersCount;
 
 			VisualizeCommand = new DelegateCommand(VisualizeCommandHandler);
 			NavigateCommand = new DelegateCommand(NavigateCommandHandler);
 			NavigateToBaseCommand = new DelegateCommand(NavigateToBaseCommandHandler);
 			ShowMembersCommand = new DelegateCommand(ShowMembersCommandHandler);
-            BrowseAncestryCommand = new DelegateCommand(BrowseAncestryCommandHandler);
-            BrowseInteractionsCommand = new DelegateCommand(BrowseInteractionsCommandHandler);
-            ExpandCommand = new DelegateCommand(ExpandCommandHandler);
+			BrowseAncestryCommand = new DelegateCommand(BrowseAncestryCommandHandler);
+			BrowseInteractionsCommand = new DelegateCommand(BrowseInteractionsCommandHandler);
+			ExpandCommand = new DelegateCommand(ExpandCommandHandler);
 
 			RefreshBackground();
-            ResetName();
+			ResetName();
 		}
 
 		public ICommand VisualizeCommand { get; private set; }
 		public ICommand NavigateCommand { get; private set; }
 		public ICommand NavigateToBaseCommand { get; private set; }
 		public ICommand ShowMembersCommand { get; private set; }
-        public ICommand BrowseAncestryCommand { get; private set; }
-        public ICommand BrowseInteractionsCommand { get; private set; }
-        public ICommand ExpandCommand { get; private set; }
+		public ICommand BrowseAncestryCommand { get; private set; }
+		public ICommand BrowseInteractionsCommand { get; private set; }
+		public ICommand ExpandCommand { get; private set; }
 
 		public TypeInfo TypeInfo
 		{
 			get { return _typeInfo; }
 		}
 
-        public AssemblyViewModel AssemblyViewModel
-        {
-            get { return _assemblyViewModel; }
-        }
+		public AssemblyViewModel AssemblyViewModel
+		{
+			get { return _assemblyViewModel; }
+		}
 
-        public string NameStart { get; set; }
-        public string NameMiddle { get; set; }
-        public string NameEnd { get; set; }       
+		public string NameStart { get; set; }
+		public string NameMiddle { get; set; }
+		public string NameEnd { get; set; }
 
-        public Thickness NameMargin
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(NameMiddle))
-                {
-                    return new Thickness(0, 0, -4, 0);
-                }
-                if (string.IsNullOrWhiteSpace(NameStart)
-                    && string.IsNullOrWhiteSpace(NameEnd))
-                {
-                    return new Thickness(-4, 0, -4, 0);
-                }
-                if (string.IsNullOrWhiteSpace(NameStart))
-                {
-                    return new Thickness(-4, 0, 0, 0);
-                }
-                if (string.IsNullOrWhiteSpace(NameEnd))
-                {
-                    return new Thickness(0, 0, -4, 0);
-                }
+		public Thickness NameMargin
+		{
+			get
+			{
+				if (string.IsNullOrWhiteSpace(NameMiddle))
+					return new Thickness(0, 0, -4, 0);
+				if (string.IsNullOrWhiteSpace(NameStart)
+				    && string.IsNullOrWhiteSpace(NameEnd))
+					return new Thickness(-4, 0, -4, 0);
+				if (string.IsNullOrWhiteSpace(NameStart))
+					return new Thickness(-4, 0, 0, 0);
+				if (string.IsNullOrWhiteSpace(NameEnd))
+					return new Thickness(0, 0, -4, 0);
 
-                return new Thickness();
-            }
-        }
+				return new Thickness();
+			}
+		}
 
-        public bool IsExpanded
-        {
-            get
-            {
-                return _isExpanded;
-            }
-            set
-            {
-                _isExpanded = value;
-                OnPropertyChanged("IsExpanded");
-                OnPropertyChanged("CanExpand");
-            }
-        }
+		public bool IsExpanded
+		{
+			get { return _isExpanded; }
+			set
+			{
+				_isExpanded = value;
+				OnPropertyChanged("IsExpanded");
+				OnPropertyChanged("CanExpand");
+			}
+		}
 
-        public bool CanExpand
-        {
-            get
-            {
-                return !IsExpanded;
-            }
-        }
+		public bool CanExpand
+		{
+			get { return !IsExpanded; }
+		}
 
-        public bool IsNameMiddleEmpty { get { return string.IsNullOrWhiteSpace(NameMiddle); } }
+		public bool IsNameMiddleEmpty
+		{
+			get { return string.IsNullOrWhiteSpace(NameMiddle); }
+		}
 
 		public IEnumerable<TypeViewModel> FlattenedHierarchy
 		{
-			get 
-			{ 
+			get
+			{
 				var list = new List<TypeViewModel> {this};
-                if (IsExpanded)
-                {
-                    foreach (var typeViewModel in DerivedTypes)
-                    {
-                        list.AddRange(typeViewModel.FlattenedHierarchy);
-                    }
-                }
+				if (IsExpanded)
+					foreach (var typeViewModel in DerivedTypes)
+						list.AddRange(typeViewModel.FlattenedHierarchy);
 				return list;
 			}
 		}
 
-        public ImageSource Icon { get { return _typeInfo.Icon; } }
+		public ImageSource Icon
+		{
+			get { return _typeInfo.Icon; }
+		}
 
 		public string Name
 		{
@@ -221,15 +206,9 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 			get { return _fullName; }
 		}
 
-		public int DescendantsCount
-		{
-			get { return _descendantsCount; }
-		}
+		public int DescendantsCount { get; private set; }
 
-		public int DirectDescendantsCount
-		{
-			get { return _directDescendantsCount; }
-		}
+		public int DirectDescendantsCount { get; private set; }
 
 		public int MembersCount
 		{
@@ -243,10 +222,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		public bool HasBaseType
 		{
-			get
-			{
-				return _typeInfo.BaseType != null;
-			}
+			get { return _typeInfo.BaseType != null; }
 		}
 
 		public bool IsBaseTypeAvailable
@@ -256,7 +232,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		public bool HasDescendants
 		{
-			get { return _descendantsCount > 0; }
+			get { return DescendantsCount > 0; }
 		}
 
 		public bool IsCurrent
@@ -308,10 +284,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		public string BaseTypeName
 		{
-			get
-			{
-				return _baseTypeName;
-			}
+			get { return _baseTypeName; }
 		}
 
 		public string BaseTypeFullName
@@ -322,12 +295,12 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		public bool ShowMembers
 		{
 			get { return _showMembers; }
-			set 
-			{ 
+			set
+			{
 				_showMembers = value;
 				OnPropertyChanged("ShowMembers");
 			}
-		} 
+		}
 
 		public bool CanVisualize
 		{
@@ -347,34 +320,28 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 
 		public void RefreshBackground()
 		{
-			var brush = DefaultBackground; 
+			var brush = DefaultBackground;
 			if (IsInternal)
-			{
 				brush = InternalBackground;
-			}
 			if (AssignedBackground != null)
-			{
 				brush = AssignedBackground;
-			}
 			if (IsCurrent)
-			{
 				brush = GraphRootBackground;
-			}
 
 			Background = brush;
 		}
 
-        public void ResetName()
-        {
-            NameStart = Name;
-            NameMiddle = string.Empty;
-            NameEnd = string.Empty;
-        }       
+		public void ResetName()
+		{
+			NameStart = Name;
+			NameMiddle = string.Empty;
+			NameEnd = string.Empty;
+		}
 
 		public void CountDescendants()
 		{
-			_descendantsCount = FlattenedHierarchy.Count() - 1;
-			_directDescendantsCount = DerivedTypes.Count();
+			DescendantsCount = FlattenedHierarchy.Count() - 1;
+			DirectDescendantsCount = DerivedTypes.Count();
 
 			OnPropertyChanged("DescendantsCount");
 			OnPropertyChanged("DirectDescendantsCount");
@@ -393,9 +360,7 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		private void NavigateToBaseCommandHandler()
 		{
 			if (!IsBaseTypeAvailable)
-			{
 				return;
-			}
 			Services.JumpTo(_typeInfo.BaseType.MemberReference);
 		}
 
@@ -403,26 +368,24 @@ namespace AssemblyVisualizer.AssemblyBrowser.ViewModels
 		{
 			var graphScreen = _windowViewModel.Screen as GraphScreen;
 			if (graphScreen == null)
-			{
 				return;
-			}
 			graphScreen.ShowDetails(this);
 		}
 
-        private void BrowseAncestryCommandHandler()
-        {
-            Services.BrowseAncestry(TypeInfo);
-        }
+		private void BrowseAncestryCommandHandler()
+		{
+			Services.BrowseAncestry(TypeInfo);
+		}
 
-        private void BrowseInteractionsCommandHandler()
-        {
-            Services.BrowseInteractions(new[] { TypeInfo }, true);
-        }
+		private void BrowseInteractionsCommandHandler()
+		{
+			Services.BrowseInteractions(new[] {TypeInfo}, true);
+		}
 
-        private void ExpandCommandHandler()
-        {
-            var screen = _windowViewModel.Screen as GraphScreen;
-            screen.Expand(this);
-        }
+		private void ExpandCommandHandler()
+		{
+			var screen = _windowViewModel.Screen as GraphScreen;
+			screen.Expand(this);
+		}
 	}
 }

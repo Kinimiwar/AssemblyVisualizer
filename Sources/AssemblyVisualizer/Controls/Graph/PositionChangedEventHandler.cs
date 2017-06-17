@@ -4,5 +4,5 @@
 
 namespace AssemblyVisualizer.Controls.Graph
 {
-    public delegate void PositionChangedEventHandler(object sender, PositionChangedEventArgs args);
+	public delegate void PositionChangedEventHandler(object sender, PositionChangedEventArgs args);
 }

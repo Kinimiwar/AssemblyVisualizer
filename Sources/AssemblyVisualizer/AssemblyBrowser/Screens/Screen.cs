@@ -2,17 +2,13 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using AssemblyVisualizer.AssemblyBrowser.ViewModels;
 using AssemblyVisualizer.Infrastructure;
 
 namespace AssemblyVisualizer.AssemblyBrowser.Screens
 {
-	class Screen : ViewModelBase
+	internal class Screen : ViewModelBase
 	{
 		public Screen(AssemblyBrowserWindowViewModel windowViewModel)
 		{
@@ -39,8 +35,8 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		{
 		}
 
-        public virtual void ToggleAssembliesVisibility()
-        { 
-        }
+		public virtual void ToggleAssembliesVisibility()
+		{
+		}
 	}
 }

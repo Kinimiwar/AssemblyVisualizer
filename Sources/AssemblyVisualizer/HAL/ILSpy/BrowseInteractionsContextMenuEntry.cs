@@ -4,45 +4,38 @@
 
 #if ILSpy
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ICSharpCode.ILSpy;
-using ICSharpCode.TreeView;
 using ICSharpCode.ILSpy.TreeNodes;
-using AssemblyVisualizer.InteractionBrowser;
 
 namespace AssemblyVisualizer.HAL.ILSpy
 {
-    [ExportContextMenuEntry(Header = "Browse Interactions")]
-    sealed class BrowseInteractionsContextMenuEntry : IContextMenuEntry
-    {
-        public void Execute(TextViewContext context)
-        {
-            var types = context.SelectedTreeNodes
-                .OfType<TypeTreeNode>()
-                .Select(n => HAL.Converter.Type(n.TypeDefinition))
-                .ToArray();
+	[ExportContextMenuEntry(Header = "Browse Interactions")]
+	internal sealed class BrowseInteractionsContextMenuEntry : IContextMenuEntry
+	{
+		public void Execute(TextViewContext context)
+		{
+			var types = context.SelectedTreeNodes
+				.OfType<TypeTreeNode>()
+				.Select(n => HAL.Converter.Type(n.TypeDefinition))
+				.ToArray();
 
-            Services.BrowseInteractions(types, true);
-        }
+			Services.BrowseInteractions(types, true);
+		}
 
-        public bool IsEnabled(TextViewContext context)
-        {
-            return true;
-        }
+		public bool IsEnabled(TextViewContext context)
+		{
+			return true;
+		}
 
-        public bool IsVisible(TextViewContext context)
-        {
-            if (context.SelectedTreeNodes == null)
-            {
-                return false;
-            }
+		public bool IsVisible(TextViewContext context)
+		{
+			if (context.SelectedTreeNodes == null)
+				return false;
 
-            return (context.SelectedTreeNodes.All(n => n is TypeTreeNode));
-        }
-    }
+			return context.SelectedTreeNodes.All(n => n is TypeTreeNode);
+		}
+	}
 }
 
 #endif

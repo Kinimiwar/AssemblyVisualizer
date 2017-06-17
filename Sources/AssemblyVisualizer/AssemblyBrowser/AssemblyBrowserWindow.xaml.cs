@@ -4,45 +4,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using AssemblyVisualizer.AssemblyBrowser.ViewModels;
-using AssemblyVisualizer.Model;
 using AssemblyVisualizer.HAL;
-
+using AssemblyVisualizer.Model;
 
 namespace AssemblyVisualizer.AssemblyBrowser
 {
 	/// <summary>
-	/// Interaction logic for AssemblyBrowserWindow.xaml
+	///     Interaction logic for AssemblyBrowserWindow.xaml
 	/// </summary>
-	partial class AssemblyBrowserWindow : Window
+	internal partial class AssemblyBrowserWindow : Window
 	{
-        public AssemblyBrowserWindow(IEnumerable<AssemblyInfo> assemblies)
-            : this(assemblies, null)
-        { 
-        }
+		public AssemblyBrowserWindow(IEnumerable<AssemblyInfo> assemblies)
+			: this(assemblies, null)
+		{
+		}
 
 		public AssemblyBrowserWindow(IEnumerable<AssemblyInfo> assemblies, TypeInfo typeInfo)
 		{
 			InitializeComponent();
 
-			ViewModel = new AssemblyBrowserWindowViewModel(assemblies, typeInfo, Dispatcher);			
+			ViewModel = new AssemblyBrowserWindowViewModel(assemblies, typeInfo, Dispatcher);
 
 			CommandBindings.Add(new CommandBinding(NavigationCommands.BrowseForward,
-			                                       (s, e) => ViewModel.NavigateForwardCommand.Execute(null)));
+				(s, e) => ViewModel.NavigateForwardCommand.Execute(null)));
 			CommandBindings.Add(new CommandBinding(NavigationCommands.BrowseBack,
-												   (s, e) => ViewModel.NavigateBackCommand.Execute(null)));
+				(s, e) => ViewModel.NavigateBackCommand.Execute(null)));
 
-            WindowManager.AddAssemblyBrowser(this);
+			WindowManager.AddAssemblyBrowser(this);
 		}
 
 		public AssemblyBrowserWindowViewModel ViewModel
@@ -53,18 +44,18 @@ namespace AssemblyVisualizer.AssemblyBrowser
 
 		private void WindowDrop(object sender, DragEventArgs e)
 		{
-            #if ILSpy
+#if ILSpy
 
 			var assemblyFilePaths = e.Data.GetData("ILSpyAssemblies") as string[];
 			foreach (var assemblyFilePath in assemblyFilePaths)
 			{
 				var loadedAssembly =
 					Services.MainWindow.CurrentAssemblyList.OpenAssembly(assemblyFilePath);
-				
+
 				ViewModel.AddAssembly(Converter.Assembly(loadedAssembly.AssemblyDefinition));
 			}
 
-            #endif
+#endif
 		}
 
 		private void SearchExecuted(object sender, ExecutedRoutedEventArgs e)

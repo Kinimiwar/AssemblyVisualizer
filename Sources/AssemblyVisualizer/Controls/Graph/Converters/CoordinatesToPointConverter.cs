@@ -3,31 +3,33 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using System.Windows.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 
 namespace AssemblyVisualizer.Controls.Graph.Converters
 {
 	public class CoordinatesToPointConverter : IMultiValueConverter
 	{
-		public object Convert( object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture )
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			Debug.Assert( values != null && values.Length == 2, "CoordinatesToPointConverter.Convert should get 2 values as input: X and Y coordinates" );
+			Debug.Assert(values != null && values.Length == 2,
+				"CoordinatesToPointConverter.Convert should get 2 values as input: X and Y coordinates");
 
-			double x = (double)values[0];
-			double y = (double)values[1];
+			var x = (double) values[0];
+			var y = (double) values[1];
 
-			return new Point( x, y );
+			return new Point(x, y);
 		}
 
-		public object[] ConvertBack( object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture )
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			Debug.Assert( !( value is Point ), "CoordinatesToPointConverter.ConvertBack should get a Point object as input." );
+			Debug.Assert(!(value is Point), "CoordinatesToPointConverter.ConvertBack should get a Point object as input.");
 
-			var point = (Point)value;
+			var point = (Point) value;
 
-			return new object[] { point.X, point.Y };
+			return new object[] {point.X, point.Y};
 		}
 	}
 }

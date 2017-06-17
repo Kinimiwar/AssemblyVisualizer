@@ -13,6 +13,6 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 		where TEdge : IEdge<TVertex>
 		where TGraph : IBidirectionalGraph<TVertex, TEdge>
 	{
-	    IDictionary<TVertex, Size> InnerCanvasSizes { get; }
+		IDictionary<TVertex, Size> InnerCanvasSizes { get; }
 	}
 }

@@ -4,51 +4,43 @@
 
 #if ILSpy
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows;
+using AssemblyVisualizer.AncestryBrowser;
 using ICSharpCode.ILSpy;
 using ICSharpCode.ILSpy.TreeNodes;
-using ICSharpCode.TreeView;
-using AssemblyVisualizer.Properties;
-using AssemblyVisualizer.Model;
-using AssemblyVisualizer.AncestryBrowser;
 
 namespace AssemblyVisualizer.HAL.ILSpy
 {
 	[ExportContextMenuEntry(Header = "Browse Ancestry")]
-	sealed class BrowseAncestryContextMenuEntry : IContextMenuEntry
+	internal sealed class BrowseAncestryContextMenuEntry : IContextMenuEntry
 	{
-        public bool IsVisible(TextViewContext context)
+		public bool IsVisible(TextViewContext context)
 		{
-            if (context.SelectedTreeNodes == null)
-            {
-                return false;
-            }
+			if (context.SelectedTreeNodes == null)
+				return false;
 
-			return (context.SelectedTreeNodes.Count() == 1) 
-				   && (context.SelectedTreeNodes.Single() is TypeTreeNode);
+			return context.SelectedTreeNodes.Count() == 1
+			       && context.SelectedTreeNodes.Single() is TypeTreeNode;
 		}
 
-        public bool IsEnabled(TextViewContext context)
+		public bool IsEnabled(TextViewContext context)
 		{
 			return true;
 		}
 
-        public void Execute(TextViewContext context)
+		public void Execute(TextViewContext context)
 		{
 			var typeDefinition = context.SelectedTreeNodes
 				.OfType<TypeTreeNode>()
-				.Single().TypeDefinition;	
-			
+				.Single().TypeDefinition;
+
 			var window = new AncestryBrowserWindow(HAL.Converter.Type(typeDefinition))
-			             	{
-			             		Owner = MainWindow.Instance
-			             	};
+			{
+				Owner = MainWindow.Instance
+			};
 			window.Show();
 		}
 	}
 }
+
 #endif

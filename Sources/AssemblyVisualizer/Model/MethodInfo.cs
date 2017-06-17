@@ -2,18 +2,13 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace AssemblyVisualizer.Model
 {
-    class MethodInfo : MemberInfo
-    {
-        public bool IsVirtual { get; set; }
-        public bool IsOverride { get; set; }
-        public bool IsSpecialName { get; set; }
-        public bool IsFinal { get; set; }
-    }
+	internal class MethodInfo : MemberInfo
+	{
+		public bool IsVirtual { get; set; }
+		public bool IsOverride { get; set; }
+		public bool IsSpecialName { get; set; }
+		public bool IsFinal { get; set; }
+	}
 }

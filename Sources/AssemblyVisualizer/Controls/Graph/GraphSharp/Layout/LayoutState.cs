@@ -11,8 +11,31 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
 	public class LayoutState<TVertex, TEdge>
 	{
+		public LayoutState(
+			IDictionary<TVertex, Point> positions,
+			IDictionary<TVertex, Point> overlapRemovedPositions,
+			IDictionary<TEdge, Point[]> routeInfos,
+			TimeSpan computationTime,
+			int iteration,
+			string message)
+		{
+			Debug.Assert(computationTime != null);
+
+			Positions = positions;
+			OverlapRemovedPositions = overlapRemovedPositions != null ? overlapRemovedPositions : positions;
+
+			if (routeInfos != null)
+				RouteInfos = routeInfos;
+			else
+				RouteInfos = new Dictionary<TEdge, Point[]>(0);
+
+			ComputationTime = computationTime;
+			Iteration = iteration;
+			Message = message;
+		}
+
 		/// <summary>
-		/// Gets the position of every vertex in this state of the layout process.
+		///     Gets the position of every vertex in this state of the layout process.
 		/// </summary>
 		public IDictionary<TVertex, Point> Positions { get; protected set; }
 
@@ -21,41 +44,18 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 		public IDictionary<TEdge, Point[]> RouteInfos { get; set; }
 
 		/// <summary>
-		/// Gets how much time did it take to compute the position of the vertices (till the end of this iteration).
+		///     Gets how much time did it take to compute the position of the vertices (till the end of this iteration).
 		/// </summary>
 		public TimeSpan ComputationTime { get; protected set; }
 
 		/// <summary>
-		/// Gets the index of the iteration.
+		///     Gets the index of the iteration.
 		/// </summary>
 		public int Iteration { get; protected set; }
 
 		/// <summary>
-		/// Get the status message of this layout state.
+		///     Get the status message of this layout state.
 		/// </summary>
 		public string Message { get; protected set; }
-
-		public LayoutState(
-			IDictionary<TVertex, Point> positions,
-			IDictionary<TVertex, Point> overlapRemovedPositions,
-			IDictionary<TEdge, Point[]> routeInfos,
-			TimeSpan computationTime,
-			int iteration,
-			string message )
-		{
-			Debug.Assert( computationTime != null );
-
-			Positions = positions;
-			OverlapRemovedPositions = overlapRemovedPositions != null ? overlapRemovedPositions : positions;
-
-			if ( routeInfos != null )
-				RouteInfos = routeInfos;
-			else
-				RouteInfos = new Dictionary<TEdge, Point[]>( 0 );
-
-			ComputationTime = computationTime;
-			Iteration = iteration;
-			Message = message;
-		}
 	}
 }

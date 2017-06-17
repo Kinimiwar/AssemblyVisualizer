@@ -2,21 +2,17 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace AssemblyVisualizer.Infrastructure
 {
-    static class GlobalServices
-    {
-        private const string SourcesUrl = @"http://denismarkelov.github.com/AssemblyVisualizer";
+	internal static class GlobalServices
+	{
+		private const string SourcesUrl = @"http://denismarkelov.github.com/AssemblyVisualizer";
 
-        public static void NavigateToSources()
-        {
-            Process.Start(SourcesUrl);
-        }
-    }
+		public static void NavigateToSources()
+		{
+			Process.Start(SourcesUrl);
+		}
+	}
 }

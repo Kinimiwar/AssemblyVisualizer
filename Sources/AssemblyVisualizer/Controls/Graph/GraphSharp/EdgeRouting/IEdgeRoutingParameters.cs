@@ -5,6 +5,6 @@
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.EdgeRouting
 {
 	public interface IEdgeRoutingParameters : IAlgorithmParameters
-	{		
+	{
 	}
 }

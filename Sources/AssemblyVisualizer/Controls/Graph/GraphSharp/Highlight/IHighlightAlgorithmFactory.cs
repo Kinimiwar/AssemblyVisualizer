@@ -13,16 +13,16 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
 	{
 		IEnumerable<string> HighlightModes { get; }
-		bool IsValidMode( string mode );
+		bool IsValidMode(string mode);
 
 		IHighlightAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm(
 			string highlightMode,
 			IHighlightContext<TVertex, TEdge, TGraph> context,
 			IHighlightController<TVertex, TEdge, TGraph> controller,
-			IHighlightParameters parameters );
+			IHighlightParameters parameters);
 
-		IHighlightParameters CreateParameters( string highlightMode, IHighlightParameters oldParameters );
+		IHighlightParameters CreateParameters(string highlightMode, IHighlightParameters oldParameters);
 
-		string GetHighlightMode( IHighlightAlgorithm<TVertex, TEdge, TGraph> algorithm );
+		string GetHighlightMode(IHighlightAlgorithm<TVertex, TEdge, TGraph> algorithm);
 	}
 }

@@ -5,12 +5,12 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
-using System.Windows.Media.Animation;
 
 namespace AssemblyVisualizer.Controls
 {
-	public class PopupNonTopmost : System.Windows.Controls.Primitives.Popup
+	public class PopupNonTopmost : Popup
 	{
 		public static readonly DependencyProperty TopmostProperty = Window.TopmostProperty.AddOwner(
 			typeof(PopupNonTopmost),
@@ -18,32 +18,30 @@ namespace AssemblyVisualizer.Controls
 
 		public bool Topmost
 		{
-			get { return (bool)GetValue(TopmostProperty); }
+			get { return (bool) GetValue(TopmostProperty); }
 			set { SetValue(TopmostProperty, value); }
 		}
 
 		private static void OnTopmostChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
 		{
 			(obj as PopupNonTopmost).UpdateWindow();
-		}        
+		}
 
 		protected override void OnOpened(EventArgs e)
 		{
-			UpdateWindow();            
-        }
+			UpdateWindow();
+		}
 
 		private void UpdateWindow()
 		{
-			var hwnd = ((HwndSource)PresentationSource.FromVisual(this.Child)).Handle;
+			var hwnd = ((HwndSource) PresentationSource.FromVisual(Child)).Handle;
 			RECT rect;
 
 			if (NativeMethods.GetWindowRect(hwnd, out rect))
 			{
-				var result = NativeMethods.SetWindowPos(hwnd, Topmost ? -1 : -2, rect.Left, rect.Top, (int)Width, (int)Height, 0);
+				var result = NativeMethods.SetWindowPos(hwnd, Topmost ? -1 : -2, rect.Left, rect.Top, (int) Width, (int) Height, 0);
 				if (result != 1)
-				{
 					throw new InvalidOperationException("Cannot show popup.");
-				}
 			}
 		}
 
@@ -52,20 +50,12 @@ namespace AssemblyVisualizer.Controls
 		[StructLayout(LayoutKind.Sequential)]
 		private struct RECT
 		{
-			private int _left;
-			private int _top;
-			private int _right;
-			private int _bottom;
+			private readonly int _right;
+			private readonly int _bottom;
 
-			public int Left
-			{
-				get { return _left; }
-			}
+			public int Left { get; private set; }
 
-			public int Top
-			{
-				get { return _top; }
-			}
+			public int Top { get; private set; }
 		}
 
 		private static class NativeMethods
@@ -77,7 +67,7 @@ namespace AssemblyVisualizer.Controls
 			[DllImport("user32", EntryPoint = "SetWindowPos")]
 			public static extern int SetWindowPos(IntPtr hWnd, int hwndInsertAfter, int x, int y, int cx, int cy, int wFlags);
 		}
+
 		#endregion
 	}
-
 }

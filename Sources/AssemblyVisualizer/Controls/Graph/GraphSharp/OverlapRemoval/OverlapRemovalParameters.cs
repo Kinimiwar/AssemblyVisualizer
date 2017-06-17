@@ -2,22 +2,24 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
+using System.ComponentModel;
+
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 {
 	public class OverlapRemovalParameters : IOverlapRemovalParameters
 	{
-		private float verticalGap = 10;
 		private float horizontalGap = 10;
-		
+		private float verticalGap = 10;
+
 		public float VerticalGap
 		{
 			get { return verticalGap; }
 			set
 			{
-				if ( verticalGap != value )
+				if (verticalGap != value)
 				{
 					verticalGap = value;
-					NotifyChanged( "VerticalGap" );
+					NotifyChanged("VerticalGap");
 				}
 			}
 		}
@@ -27,10 +29,10 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 			get { return horizontalGap; }
 			set
 			{
-				if ( horizontalGap != value )
+				if (horizontalGap != value)
 				{
 					horizontalGap = value;
-					NotifyChanged( "HorizontalGap" );
+					NotifyChanged("HorizontalGap");
 				}
 			}
 		}
@@ -40,12 +42,12 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 			return MemberwiseClone();
 		}
 
-		protected void NotifyChanged( string propertyName )
-		{
-			if ( PropertyChanged != null )
-				PropertyChanged( this, new System.ComponentModel.PropertyChangedEventArgs( propertyName ) );
-		}
+		public event PropertyChangedEventHandler PropertyChanged;
 
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+		protected void NotifyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }

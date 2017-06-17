@@ -3,47 +3,39 @@
 // (for details please see \docs\Ms-PL)
 
 #if ILSpy
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows;
+using AssemblyVisualizer.HAL;
 using ICSharpCode.ILSpy;
 using ICSharpCode.ILSpy.TreeNodes;
-using ICSharpCode.TreeView;
-using AssemblyVisualizer.Properties;
-using AssemblyVisualizer.Model;
-using AssemblyVisualizer.HAL;
 
 namespace AssemblyVisualizer.AssemblyBrowser
 {
-    [ExportContextMenuEntry(Header = "Browse Assembly")]
-	sealed class BrowseAssemblyContextMenuEntry : IContextMenuEntry
+	[ExportContextMenuEntry(Header = "Browse Assembly")]
+	internal sealed class BrowseAssemblyContextMenuEntry : IContextMenuEntry
 	{
-        public bool IsVisible(TextViewContext context)
+		public bool IsVisible(TextViewContext context)
 		{
-            if (context.SelectedTreeNodes == null)
-            {
-                return false;
-            }
+			if (context.SelectedTreeNodes == null)
+				return false;
 
 			return context.SelectedTreeNodes.All(n => n is AssemblyTreeNode);
 		}
 
-        public bool IsEnabled(TextViewContext context)
+		public bool IsEnabled(TextViewContext context)
 		{
 			return true;
 		}
 
-        public void Execute(TextViewContext context)
+		public void Execute(TextViewContext context)
 		{
 			var assemblyDefinitions = context.SelectedTreeNodes
 				.OfType<AssemblyTreeNode>()
 				.Select(n => Converter.Assembly(n.LoadedAssembly.AssemblyDefinition))
 				.ToList();
 
-            Services.BrowseAssemblies(assemblyDefinitions);
+			Services.BrowseAssemblies(assemblyDefinitions);
 		}
 	}
 }
+
 #endif

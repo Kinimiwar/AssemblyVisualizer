@@ -3,40 +3,31 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Media.Animation;
-using AssemblyVisualizer.Controls.ZoomControl;
 using AssemblyVisualizer.Behaviors;
+using AssemblyVisualizer.Controls.ZoomControl;
 
 namespace AssemblyVisualizer.AssemblyBrowser.Screens
-{	
+{
 	internal partial class GraphScreenView : UserControl
 	{
-		public event Action LayoutFinished;
-
 		public GraphScreenView()
 		{
 			InitializeComponent();
 
 			Loaded += LoadedHandler;
-            Unloaded += UnloadedHandler;
-		}        
+			Unloaded += UnloadedHandler;
+		}
 
 		private GraphScreen ViewModel
 		{
 			get { return DataContext as GraphScreen; }
 		}
+
+		public event Action LayoutFinished;
 
 		private void GraphChangedHandler()
 		{
@@ -51,16 +42,16 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			ViewModel.FillGraphRequest += FillGraphRequestHandler;
 			ViewModel.OriginalSizeRequest += OriginalSizeRequestHandler;
 			ViewModel.FocusSearchRequest += FocusSearchRequestHandler;
-           
-            brdSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
-            assemblyList.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
+
+			brdSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
+			assemblyList.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.Fade);
 		}
 
-        private void UnloadedHandler(object sender, RoutedEventArgs e)
-        {           
-            brdSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
-            assemblyList.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
-        }
+		private void UnloadedHandler(object sender, RoutedEventArgs e)
+		{
+			brdSearch.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
+			assemblyList.SetValue(VisibilityAnimation.AnimationTypeProperty, VisibilityAnimation.AnimationType.None);
+		}
 
 		private void HideSearchAnimationCompletedHandler(object sender, EventArgs e)
 		{
@@ -112,14 +103,12 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		{
 			var handler = LayoutFinished;
 			if (handler != null)
-			{
 				handler();
-			}
 		}
 
-        private void AssemblyListMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ViewModel.IsAssemblyListVisible = false;
-        }
+		private void AssemblyListMouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			ViewModel.IsAssemblyListVisible = false;
+		}
 	}
 }

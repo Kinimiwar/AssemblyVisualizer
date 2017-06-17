@@ -4,10 +4,10 @@
 
 namespace AssemblyVisualizer.Controls.Graph
 {
-    public enum AlgorithmConstraints
-    {
-        Must,
-        Automatic,
-        Skip
-    }
+	public enum AlgorithmConstraints
+	{
+		Must,
+		Automatic,
+		Skip
+	}
 }

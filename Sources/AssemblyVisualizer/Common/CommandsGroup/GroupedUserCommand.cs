@@ -3,12 +3,12 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using AssemblyVisualizer.Infrastructure;
 using System.Windows.Input;
+using AssemblyVisualizer.Infrastructure;
 
 namespace AssemblyVisualizer.Common.CommandsGroup
 {
-	class GroupedUserCommand : ViewModelBase
+	internal class GroupedUserCommand : ViewModelBase
 	{
 		private bool _isCurrent;
 
@@ -22,16 +22,16 @@ namespace AssemblyVisualizer.Common.CommandsGroup
 		{
 			Text = text;
 			Command = new DelegateCommand(() =>
-			                              	{
-												ClearCurrentCommand();
-			                              		IsCurrent = true;
-			                              		action();
-			                              	});
+			{
+				ClearCurrentCommand();
+				IsCurrent = true;
+				action();
+			});
 		}
 
 		public string Text { get; private set; }
 		public ICommand Command { get; private set; }
-		
+
 		public bool IsCurrent
 		{
 			get { return _isCurrent; }

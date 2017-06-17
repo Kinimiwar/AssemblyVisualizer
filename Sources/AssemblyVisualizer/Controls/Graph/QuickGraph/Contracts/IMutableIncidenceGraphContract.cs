@@ -9,116 +9,119 @@ using System.Linq;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts
 {
-    [ContractClassFor(typeof(IMutableIncidenceGraph<,>))]
-    abstract class IMutableIncidenceGraphContract<TVertex, TEdge>
-        : IMutableIncidenceGraph<TVertex, TEdge>
-        where TEdge : IEdge<TVertex>
-    {
-        #region IMutableIncidenceGraph<TVertex,TEdge> Members
+	[ContractClassFor(typeof(IMutableIncidenceGraph<,>))]
+	internal abstract class IMutableIncidenceGraphContract<TVertex, TEdge>
+		: IMutableIncidenceGraph<TVertex, TEdge>
+		where TEdge : IEdge<TVertex>
+	{
+		#region IMutableGraph<TVertex,TEdge> Members
 
-        int IMutableIncidenceGraph<TVertex, TEdge>.RemoveOutEdgeIf(
-            TVertex v, 
-            EdgePredicate<TVertex, TEdge> predicate)
-        {
-            IMutableIncidenceGraph<TVertex, TEdge> ithis = this;
-            Contract.Requires(v != null);
-            Contract.Requires(ithis.ContainsVertex(v));
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<int>() == Contract.OldValue(Enumerable.Count(ithis.OutEdges(v), ve => predicate(ve))));
-            Contract.Ensures(Enumerable.All(ithis.OutEdges(v), ve => !predicate(ve)));
+		void IMutableGraph<TVertex, TEdge>.Clear()
+		{
+			throw new NotImplementedException();
+		}
 
-            return default(int);
-        }
+		#endregion
 
-        void IMutableIncidenceGraph<TVertex, TEdge>.ClearOutEdges(TVertex v)
-        {
-            IMutableIncidenceGraph<TVertex, TEdge> ithis = this;
-            Contract.Requires(v != null);
-            Contract.Requires(ithis.ContainsVertex(v));
-            Contract.Ensures(ithis.OutDegree(v) == 0);
-        }
+		#region IImplicitVertexSet<TVertex> Members
 
-        void IMutableIncidenceGraph<TVertex, TEdge>.TrimEdgeExcess()
-        {}
-        #endregion
+		bool IImplicitVertexSet<TVertex>.ContainsVertex(TVertex vertex)
+		{
+			throw new NotImplementedException();
+		}
 
-        #region IMutableGraph<TVertex,TEdge> Members
+		#endregion
 
-        void IMutableGraph<TVertex, TEdge>.Clear()
-        {
-            throw new NotImplementedException();
-        }
+		#region IMutableIncidenceGraph<TVertex,TEdge> Members
 
-        #endregion
+		int IMutableIncidenceGraph<TVertex, TEdge>.RemoveOutEdgeIf(
+			TVertex v,
+			EdgePredicate<TVertex, TEdge> predicate)
+		{
+			IMutableIncidenceGraph<TVertex, TEdge> ithis = this;
+			Contract.Requires(v != null);
+			Contract.Requires(ithis.ContainsVertex(v));
+			Contract.Requires(predicate != null);
+			Contract.Ensures(Contract.Result<int>() == Contract.OldValue(ithis.OutEdges(v).Count(ve => predicate(ve))));
+			Contract.Ensures(ithis.OutEdges(v).All(ve => !predicate(ve)));
 
-        #region IGraph<TVertex,TEdge> Members
+			return default(int);
+		}
 
-        bool IGraph<TVertex, TEdge>.IsDirected
-        {
-            get { throw new NotImplementedException(); }
-        }
+		void IMutableIncidenceGraph<TVertex, TEdge>.ClearOutEdges(TVertex v)
+		{
+			IMutableIncidenceGraph<TVertex, TEdge> ithis = this;
+			Contract.Requires(v != null);
+			Contract.Requires(ithis.ContainsVertex(v));
+			Contract.Ensures(ithis.OutDegree(v) == 0);
+		}
 
-        bool IGraph<TVertex, TEdge>.AllowParallelEdges
-        {
-            get { throw new NotImplementedException(); }
-        }
+		void IMutableIncidenceGraph<TVertex, TEdge>.TrimEdgeExcess()
+		{
+		}
 
-        #endregion
+		#endregion
 
-        #region IIncidenceGraph<TVertex,TEdge> Members
+		#region IGraph<TVertex,TEdge> Members
 
-        bool IIncidenceGraph<TVertex, TEdge>.ContainsEdge(TVertex source, TVertex target)
-        {
-            throw new NotImplementedException();
-        }
+		bool IGraph<TVertex, TEdge>.IsDirected
+		{
+			get { throw new NotImplementedException(); }
+		}
 
-        bool IIncidenceGraph<TVertex, TEdge>.TryGetEdges(TVertex source, TVertex target, out IEnumerable<TEdge> edges)
-        {
-            throw new NotImplementedException();
-        }
+		bool IGraph<TVertex, TEdge>.AllowParallelEdges
+		{
+			get { throw new NotImplementedException(); }
+		}
 
-        bool IIncidenceGraph<TVertex, TEdge>.TryGetEdge(TVertex source, TVertex target, out TEdge edge)
-        {
-            throw new NotImplementedException();
-        }
+		#endregion
 
-        #endregion
+		#region IIncidenceGraph<TVertex,TEdge> Members
 
-        #region IImplicitGraph<TVertex,TEdge> Members
+		bool IIncidenceGraph<TVertex, TEdge>.ContainsEdge(TVertex source, TVertex target)
+		{
+			throw new NotImplementedException();
+		}
 
-        bool IImplicitGraph<TVertex, TEdge>.IsOutEdgesEmpty(TVertex v)
-        {
-            throw new NotImplementedException();
-        }
+		bool IIncidenceGraph<TVertex, TEdge>.TryGetEdges(TVertex source, TVertex target, out IEnumerable<TEdge> edges)
+		{
+			throw new NotImplementedException();
+		}
 
-        int IImplicitGraph<TVertex, TEdge>.OutDegree(TVertex v)
-        {
-            throw new NotImplementedException();
-        }
+		bool IIncidenceGraph<TVertex, TEdge>.TryGetEdge(TVertex source, TVertex target, out TEdge edge)
+		{
+			throw new NotImplementedException();
+		}
 
-        IEnumerable<TEdge> IImplicitGraph<TVertex, TEdge>.OutEdges(TVertex v)
-        {
-            throw new NotImplementedException();
-        }
+		#endregion
 
-        bool IImplicitGraph<TVertex, TEdge>.TryGetOutEdges(TVertex v, out IEnumerable<TEdge> edges)
-        {
-            throw new NotImplementedException();
-        }
+		#region IImplicitGraph<TVertex,TEdge> Members
 
-        TEdge IImplicitGraph<TVertex, TEdge>.OutEdge(TVertex v, int index)
-        {
-            throw new NotImplementedException();
-        }
+		bool IImplicitGraph<TVertex, TEdge>.IsOutEdgesEmpty(TVertex v)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		int IImplicitGraph<TVertex, TEdge>.OutDegree(TVertex v)
+		{
+			throw new NotImplementedException();
+		}
 
-        #region IImplicitVertexSet<TVertex> Members
-        bool IImplicitVertexSet<TVertex>.ContainsVertex(TVertex vertex)
-        {
-            throw new NotImplementedException();
-        }
+		IEnumerable<TEdge> IImplicitGraph<TVertex, TEdge>.OutEdges(TVertex v)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
-    }
+		bool IImplicitGraph<TVertex, TEdge>.TryGetOutEdges(TVertex v, out IEnumerable<TEdge> edges)
+		{
+			throw new NotImplementedException();
+		}
+
+		TEdge IImplicitGraph<TVertex, TEdge>.OutEdge(TVertex v, int index)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
 }

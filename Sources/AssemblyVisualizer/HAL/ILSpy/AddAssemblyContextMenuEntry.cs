@@ -4,47 +4,35 @@
 
 #if ILSpy
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ICSharpCode.ILSpy;
 using ICSharpCode.ILSpy.TreeNodes;
-using ICSharpCode.TreeView;
-using AssemblyVisualizer.Properties;
-using AssemblyVisualizer.Model;
 
 namespace AssemblyVisualizer.HAL.ILSpy
 {
 	[ExportContextMenuEntry(Header = "Add to Browser")]
-	sealed class AddAssemblyContextMenuEntry : IContextMenuEntry
+	internal sealed class AddAssemblyContextMenuEntry : IContextMenuEntry
 	{
 		public bool IsVisible(TextViewContext context)
 		{
 			if (WindowManager.AssemblyBrowsers.Count != 1)
-			{
 				return false;
-			}
-            if (context.SelectedTreeNodes == null)
-            {
-                return false;
-            }
+			if (context.SelectedTreeNodes == null)
+				return false;
 
 			var window = WindowManager.AssemblyBrowsers.Single();
 			if (!window.ViewModel.Screen.AllowAssemblyDrop)
-			{
 				return false;
-			}
 
 			return context.SelectedTreeNodes.All(n => n is AssemblyTreeNode);
 		}
 
-        public bool IsEnabled(TextViewContext context)
+		public bool IsEnabled(TextViewContext context)
 		{
 			return true;
 		}
 
-        public void Execute(TextViewContext context)
+		public void Execute(TextViewContext context)
 		{
 			var assemblyDefinitions = context.SelectedTreeNodes
 				.OfType<AssemblyTreeNode>()
@@ -56,4 +44,5 @@ namespace AssemblyVisualizer.HAL.ILSpy
 		}
 	}
 }
+
 #endif

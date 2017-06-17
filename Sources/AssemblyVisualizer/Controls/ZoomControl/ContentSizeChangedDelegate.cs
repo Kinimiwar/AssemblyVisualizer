@@ -6,5 +6,5 @@ using System.Windows;
 
 namespace AssemblyVisualizer.Controls.ZoomControl
 {
-    public delegate void ContentSizeChangedHandler(object sender, Size newSize);
+	public delegate void ContentSizeChangedHandler(object sender, Size newSize);
 }

@@ -14,16 +14,17 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.EdgeRouting
 		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
 	{
 		/// <summary>
-		/// List of the available algorithms.
+		///     List of the available algorithms.
 		/// </summary>
 		IEnumerable<string> AlgorithmTypes { get; }
 
-		IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm( string newAlgorithmType, ILayoutContext<TVertex, TEdge, TGraph> context, IEdgeRoutingParameters parameters);
+		IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm(string newAlgorithmType,
+			ILayoutContext<TVertex, TEdge, TGraph> context, IEdgeRoutingParameters parameters);
 
-		IEdgeRoutingParameters CreateParameters( string algorithmType, IEdgeRoutingParameters oldParameters );
+		IEdgeRoutingParameters CreateParameters(string algorithmType, IEdgeRoutingParameters oldParameters);
 
-		bool IsValidAlgorithm( string algorithmType );
+		bool IsValidAlgorithm(string algorithmType);
 
-		string GetAlgorithmType( IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> algorithm );
+		string GetAlgorithmType(IEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> algorithm);
 	}
 }

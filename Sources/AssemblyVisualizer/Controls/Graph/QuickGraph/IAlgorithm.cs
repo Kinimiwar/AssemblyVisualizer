@@ -4,14 +4,15 @@
 
 using System.Diagnostics.Contracts;
 using AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts;
+
 //using QuickGraph.Algorithms.Services;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-   [ContractClass(typeof(IAlgorithmContract<>))]
-    public interface IAlgorithm<TGraph> :
-        IComputation
-    {
-        TGraph VisitedGraph { get;}
-    }
+	[ContractClass(typeof(IAlgorithmContract<>))]
+	public interface IAlgorithm<TGraph> :
+		IComputation
+	{
+		TGraph VisitedGraph { get; }
+	}
 }

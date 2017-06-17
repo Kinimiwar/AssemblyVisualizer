@@ -7,11 +7,33 @@ using System.Windows;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 {
-	public abstract class OverlapRemovalAlgorithmBase<TObject, TParam> : AlgorithmBase, IOverlapRemovalAlgorithm<TObject, TParam>
+	public abstract class OverlapRemovalAlgorithmBase<TObject, TParam> : AlgorithmBase,
+		IOverlapRemovalAlgorithm<TObject, TParam>
 		where TObject : class
 		where TParam : IOverlapRemovalParameters
 	{
 		protected IDictionary<TObject, Rect> originalRectangles;
+
+		protected List<RectangleWrapper<TObject>> wrappedRectangles;
+
+
+		public OverlapRemovalAlgorithmBase(IDictionary<TObject, Rect> rectangles, TParam parameters)
+		{
+			//eredeti téglalapok listája
+			originalRectangles = rectangles;
+
+			//wrapping the old rectangles, to remember which one belongs to which object
+			wrappedRectangles = new List<RectangleWrapper<TObject>>();
+			var i = 0;
+			foreach (var kvpRect in rectangles)
+			{
+				wrappedRectangles.Insert(i, new RectangleWrapper<TObject>(kvpRect.Value, kvpRect.Key));
+				i++;
+			}
+
+			Parameters = parameters;
+		}
+
 		public IDictionary<TObject, Rect> Rectangles
 		{
 			get { return originalRectangles; }
@@ -24,26 +46,6 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 			return Parameters;
 		}
 
-		protected List<RectangleWrapper<TObject>> wrappedRectangles;
-
-
-		public OverlapRemovalAlgorithmBase( IDictionary<TObject, Rect> rectangles, TParam parameters )
-		{
-			//eredeti téglalapok listája
-			originalRectangles = rectangles;
-
-			//wrapping the old rectangles, to remember which one belongs to which object
-			wrappedRectangles = new List<RectangleWrapper<TObject>>();
-			int i = 0;
-			foreach ( var kvpRect in rectangles )
-			{
-				wrappedRectangles.Insert( i, new RectangleWrapper<TObject>( kvpRect.Value, kvpRect.Key ) );
-				i++;
-			}
-
-			Parameters = parameters;
-		}
-
 		protected sealed override void InternalCompute()
 		{
 			AddGaps();
@@ -52,27 +54,27 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 
 			RemoveGaps();
 
-			foreach ( var r in wrappedRectangles )
+			foreach (var r in wrappedRectangles)
 				originalRectangles[r.Id] = r.Rectangle;
 		}
 
 		protected virtual void AddGaps()
 		{
-			foreach ( var r in wrappedRectangles )
+			foreach (var r in wrappedRectangles)
 			{
 				r.Rectangle.Width += Parameters.HorizontalGap;
 				r.Rectangle.Height += Parameters.VerticalGap;
-				r.Rectangle.Offset( -Parameters.HorizontalGap / 2, -Parameters.VerticalGap / 2 );
+				r.Rectangle.Offset(-Parameters.HorizontalGap / 2, -Parameters.VerticalGap / 2);
 			}
 		}
 
 		protected virtual void RemoveGaps()
 		{
-			foreach ( var r in wrappedRectangles )
+			foreach (var r in wrappedRectangles)
 			{
 				r.Rectangle.Width -= Parameters.HorizontalGap;
 				r.Rectangle.Height -= Parameters.VerticalGap;
-				r.Rectangle.Offset( Parameters.HorizontalGap / 2, Parameters.VerticalGap / 2 );
+				r.Rectangle.Offset(Parameters.HorizontalGap / 2, Parameters.VerticalGap / 2);
 			}
 		}
 

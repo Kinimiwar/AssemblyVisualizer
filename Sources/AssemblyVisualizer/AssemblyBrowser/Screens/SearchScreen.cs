@@ -5,115 +5,29 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using System.Windows.Input;
 using System.Windows.Threading;
 using AssemblyVisualizer.AssemblyBrowser.ViewModels;
-using AssemblyVisualizer.Infrastructure;
-using System.Windows.Input;
 using AssemblyVisualizer.Common.CommandsGroup;
+using AssemblyVisualizer.Infrastructure;
 using AssemblyVisualizer.Properties;
 
 namespace AssemblyVisualizer.AssemblyBrowser.Screens
 {
-	class SearchScreen : Screen
+	internal class SearchScreen : Screen
 	{
-		private enum SearchMode
-		{
-			All,
-			Interfaces,
-			ValueTypes,
-			Enums
-		}
-
-		private enum TypeVisibility
-		{
-			Any,
-			Public,
-			Internal
-		}
-
-		private enum SortingMode
-		{
-			Name,
-			DescendantsCount,
-			MembersCount
-		}		
+		private bool _isSearchPerformed = true;
+		private SearchMode _searchMode = SearchMode.All;
+		private IList<TypeViewModel> _searchResults;
 
 		private string _searchTerm = string.Empty;
-		private bool _isSearchPerformed = true;
 		private DispatcherTimer _searchTimer;
-		private SearchMode _searchMode = SearchMode.All;
+		private bool _showAnonymousMethodTypes;
 		private SortingMode _sortingMode = SortingMode.DescendantsCount;
 		private TypeVisibility _typeVisibilityFilter = TypeVisibility.Any;
-        private bool _showAnonymousMethodTypes;
-        private IList<TypeViewModel> _searchResults;
-		
-		#region // .ctor
 
-		public SearchScreen(AssemblyBrowserWindowViewModel windowViewModel)
-			: base(windowViewModel)
-		{
-			InitializeSearchTimer();
-			
-            ClearSearchCommand = new DelegateCommand(ClearSearchCommandHandler);
-
-			InitializeSearchControl();
-		}
-
-		private void InitializeSearchTimer()
-		{
-			_searchTimer = new DispatcherTimer(DispatcherPriority.Normal, WindowViewModel.Dispatcher)
-			{
-				Interval = TimeSpan.FromMilliseconds(400)
-			};
-			_searchTimer.Tick += SearchTimerTick;
-		}
-
-		private void InitializeSearchControl()
-		{
-			var sortingGroup = new CommandsGroupViewModel(
-					Resources.SortBy,
-				    new List<GroupedUserCommand>
-				    	{
-				    		new GroupedUserCommand(Resources.Name, SortByName),
-				    		new GroupedUserCommand(Resources.DescendantsCount, SortByDescendantsCount, true),
-							new GroupedUserCommand(Resources.MembersCount, SortByMembersCount)
-				    	});
-
-			var filteringByTypeGroup = new CommandsGroupViewModel(
-					Resources.Types,
-					new List<GroupedUserCommand>
-			         	{
-			            	new GroupedUserCommand(Resources.All, ShowAllTypes, true),
-			            	new GroupedUserCommand(Resources.Interfaces, ShowInterfaces),
-							new GroupedUserCommand(Resources.ValueTypes, ShowValueTypes),
-							new GroupedUserCommand(Resources.Enums, ShowEnums)
-			            });
-
-			var filteringByVisibilityGroup = new CommandsGroupViewModel(
-					Resources.Visibility,
-					new List<GroupedUserCommand>
-			         	{
-			            	new GroupedUserCommand(Resources.Any, ShowAnyVisibility, true),
-			            	new GroupedUserCommand(Resources.Public, ShowPublicTypes),
-							new GroupedUserCommand(Resources.Internal, ShowInternalTypes)
-			            });
-
-			SearchControlGroups = new ObservableCollection<CommandsGroupViewModel>
-			                      	{
-			                      		sortingGroup,
-										filteringByTypeGroup,
-										filteringByVisibilityGroup
-			                      	};
-		}
-
-		#endregion
-
-		public event Action SearchFocusRequested;
-		
-        public ICommand ClearSearchCommand { get; private set; }
+		public ICommand ClearSearchCommand { get; private set; }
 
 		public bool IsSearchPerformed
 		{
@@ -132,15 +46,13 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			{
 				_searchTerm = value;
 				if (_searchTimer.IsEnabled)
-				{
 					_searchTimer.Stop();
-				}
 				_searchTimer.Start();
 				IsSearchPerformed = false;
 
-                OnPropertyChanged("SearchTerm");
+				OnPropertyChanged("SearchTerm");
 				OnPropertyChanged("IsSearchTermEmpty");
-                OnPropertyChanged("IsSearchTermFilled");
+				OnPropertyChanged("IsSearchTermFilled");
 			}
 		}
 
@@ -149,24 +61,21 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			get { return string.IsNullOrEmpty(SearchTerm); }
 		}
 
-        public bool IsSearchTermFilled
-        {
-            get { return !IsSearchTermEmpty; }
-        }
+		public bool IsSearchTermFilled
+		{
+			get { return !IsSearchTermEmpty; }
+		}
 
-        public bool ShowAnonymousMethodTypes
-        {
-            get
-            {
-                return _showAnonymousMethodTypes;
-            }
-            set
-            {
-                _showAnonymousMethodTypes = value;
-                OnPropertyChanged("ShowAnonymousMethodTypes");
-                TriggerSearch();
-            }
-        }
+		public bool ShowAnonymousMethodTypes
+		{
+			get { return _showAnonymousMethodTypes; }
+			set
+			{
+				_showAnonymousMethodTypes = value;
+				OnPropertyChanged("ShowAnonymousMethodTypes");
+				TriggerSearch();
+			}
+		}
 
 		public ObservableCollection<CommandsGroupViewModel> SearchControlGroups { get; private set; }
 
@@ -174,17 +83,13 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		{
 			get
 			{
-                if (_searchResults != null)
-                {
-                    return _searchResults;
-                }
+				if (_searchResults != null)
+					return _searchResults;
 
 				var results = WindowViewModel.TypesForSearch;
 
 				if (!string.IsNullOrWhiteSpace(SearchTerm))
-				{
-					results = results.Where(SatisfiesSearchTerm);                    
-				}
+					results = results.Where(SatisfiesSearchTerm);
 
 				switch (_searchMode)
 				{
@@ -209,11 +114,9 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 						break;
 				}
 
-                if (!_showAnonymousMethodTypes)
-                {
-                    results = results.Where(
-                        t => t.Name.IndexOf("<>c__DisplayClass", StringComparison.InvariantCulture) == -1);
-                }
+				if (!_showAnonymousMethodTypes)
+					results = results.Where(
+						t => t.Name.IndexOf("<>c__DisplayClass", StringComparison.InvariantCulture) == -1);
 
 				switch (_sortingMode)
 				{
@@ -228,27 +131,105 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 						break;
 				}
 
-                if (!string.IsNullOrWhiteSpace(SearchTerm))
-                {
-                    results = results.Select(MarkSearchTerm);
-                }
-                else
-                {
-                    results = results.Select(ClearSearchTerm);
-                }
+				if (!string.IsNullOrWhiteSpace(SearchTerm))
+					results = results.Select(MarkSearchTerm);
+				else
+					results = results.Select(ClearSearchTerm);
 
-                _searchResults = results.ToList();
-                return _searchResults;
+				_searchResults = results.ToList();
+				return _searchResults;
 			}
 		}
 
-        public int ItemsCount
-        {
-            get
-            {
-                return SearchResults.Count();
-            }
-        }
+		public int ItemsCount
+		{
+			get { return SearchResults.Count(); }
+		}
+
+		public event Action SearchFocusRequested;
+
+		private enum SearchMode
+		{
+			All,
+			Interfaces,
+			ValueTypes,
+			Enums
+		}
+
+		private enum TypeVisibility
+		{
+			Any,
+			Public,
+			Internal
+		}
+
+		private enum SortingMode
+		{
+			Name,
+			DescendantsCount,
+			MembersCount
+		}
+
+		#region // .ctor
+
+		public SearchScreen(AssemblyBrowserWindowViewModel windowViewModel)
+			: base(windowViewModel)
+		{
+			InitializeSearchTimer();
+
+			ClearSearchCommand = new DelegateCommand(ClearSearchCommandHandler);
+
+			InitializeSearchControl();
+		}
+
+		private void InitializeSearchTimer()
+		{
+			_searchTimer = new DispatcherTimer(DispatcherPriority.Normal, WindowViewModel.Dispatcher)
+			{
+				Interval = TimeSpan.FromMilliseconds(400)
+			};
+			_searchTimer.Tick += SearchTimerTick;
+		}
+
+		private void InitializeSearchControl()
+		{
+			var sortingGroup = new CommandsGroupViewModel(
+				Resources.SortBy,
+				new List<GroupedUserCommand>
+				{
+					new GroupedUserCommand(Resources.Name, SortByName),
+					new GroupedUserCommand(Resources.DescendantsCount, SortByDescendantsCount, true),
+					new GroupedUserCommand(Resources.MembersCount, SortByMembersCount)
+				});
+
+			var filteringByTypeGroup = new CommandsGroupViewModel(
+				Resources.Types,
+				new List<GroupedUserCommand>
+				{
+					new GroupedUserCommand(Resources.All, ShowAllTypes, true),
+					new GroupedUserCommand(Resources.Interfaces, ShowInterfaces),
+					new GroupedUserCommand(Resources.ValueTypes, ShowValueTypes),
+					new GroupedUserCommand(Resources.Enums, ShowEnums)
+				});
+
+			var filteringByVisibilityGroup = new CommandsGroupViewModel(
+				Resources.Visibility,
+				new List<GroupedUserCommand>
+				{
+					new GroupedUserCommand(Resources.Any, ShowAnyVisibility, true),
+					new GroupedUserCommand(Resources.Public, ShowPublicTypes),
+					new GroupedUserCommand(Resources.Internal, ShowInternalTypes)
+				});
+
+			SearchControlGroups = new ObservableCollection<CommandsGroupViewModel>
+			{
+				sortingGroup,
+				filteringByTypeGroup,
+				filteringByVisibilityGroup
+			};
+		}
+
+		#endregion
 
 		#region // Public methods
 
@@ -257,15 +238,15 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 			TriggerSearch();
 		}
 
-        public void NotifyAssemblySelectionChanged()
-        {
-            TriggerSearch();
-        }
+		public void NotifyAssemblySelectionChanged()
+		{
+			TriggerSearch();
+		}
 
 		public void FocusSearchField()
 		{
 			OnSearchFocusRequested();
-		}        
+		}
 
 		#endregion
 
@@ -279,25 +260,24 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 		private bool SatisfiesSearchTerm(TypeViewModel typeViewModel)
 		{
 			return typeViewModel
-				.Name.IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0;
-
+				       .Name.IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0;
 		}
 
-        private TypeViewModel MarkSearchTerm(TypeViewModel type)
-        {            
-            var index = type.Name.IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase);
-            type.NameStart = type.Name.Substring(0, index);
-            type.NameMiddle = type.Name.Substring(index, SearchTerm.Length);
-            type.NameEnd = type.Name.Substring(index + SearchTerm.Length);
-            
-            return type;
-        }
+		private TypeViewModel MarkSearchTerm(TypeViewModel type)
+		{
+			var index = type.Name.IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase);
+			type.NameStart = type.Name.Substring(0, index);
+			type.NameMiddle = type.Name.Substring(index, SearchTerm.Length);
+			type.NameEnd = type.Name.Substring(index + SearchTerm.Length);
 
-        public TypeViewModel ClearSearchTerm(TypeViewModel type)
-        {
-            type.ResetName();
-            return type;
-        }
+			return type;
+		}
+
+		public TypeViewModel ClearSearchTerm(TypeViewModel type)
+		{
+			type.ResetName();
+			return type;
+		}
 
 		private void SearchTimerTick(object sender, EventArgs e)
 		{
@@ -308,28 +288,26 @@ namespace AssemblyVisualizer.AssemblyBrowser.Screens
 
 		private void TriggerSearch()
 		{
-            _searchResults = null;
+			_searchResults = null;
 			OnPropertyChanged("SearchResults");
-            OnPropertyChanged("ItemsCount");
+			OnPropertyChanged("ItemsCount");
 		}
 
 		private void OnSearchFocusRequested()
 		{
 			var handler = SearchFocusRequested;
 			if (handler != null)
-			{
 				handler();
-			}
 		}
 
 		#endregion
 
 		#region // Command handlers
 
-        private void ClearSearchCommandHandler()
-        {
-            SearchTerm = string.Empty;
-        }
+		private void ClearSearchCommandHandler()
+		{
+			SearchTerm = string.Empty;
+		}
 
 		private void SortByName()
 		{

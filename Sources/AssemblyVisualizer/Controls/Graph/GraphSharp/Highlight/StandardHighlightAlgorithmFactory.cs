@@ -8,28 +8,29 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 {
-	public class StandardHighlightAlgorithmFactory<TVertex, TEdge, TGraph> : IHighlightAlgorithmFactory<TVertex, TEdge, TGraph>
+	public class StandardHighlightAlgorithmFactory<TVertex, TEdge, TGraph> :
+		IHighlightAlgorithmFactory<TVertex, TEdge, TGraph>
 		where TVertex : class
 		where TEdge : IEdge<TVertex>
 		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
 	{
-		private static readonly string[] highlightModes = { "Simple" };
+		private static readonly string[] highlightModes = {"Simple"};
 
 		public IEnumerable<string> HighlightModes
 		{
 			get { return highlightModes; }
 		}
 
-		public bool IsValidMode( string mode )
+		public bool IsValidMode(string mode)
 		{
-			return string.IsNullOrEmpty( mode ) || highlightModes.Contains( mode );
+			return string.IsNullOrEmpty(mode) || highlightModes.Contains(mode);
 		}
 
 		public IHighlightAlgorithm<TVertex, TEdge, TGraph> CreateAlgorithm(
 			string highlightMode,
 			IHighlightContext<TVertex, TEdge, TGraph> context,
 			IHighlightController<TVertex, TEdge, TGraph> controller,
-			IHighlightParameters parameters )
+			IHighlightParameters parameters)
 		{
 			switch (highlightMode)
 			{
@@ -40,7 +41,7 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 			}
 		}
 
-		public IHighlightParameters CreateParameters( string highlightMode, IHighlightParameters oldParameters )
+		public IHighlightParameters CreateParameters(string highlightMode, IHighlightParameters oldParameters)
 		{
 			switch (highlightMode)
 			{
@@ -51,9 +52,9 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 			}
 		}
 
-		public string GetHighlightMode( IHighlightAlgorithm<TVertex, TEdge, TGraph> algorithm )
+		public string GetHighlightMode(IHighlightAlgorithm<TVertex, TEdge, TGraph> algorithm)
 		{
-			if ( algorithm is SimpleHighlightAlgorithm<TVertex, TEdge, TGraph> )
+			if (algorithm is SimpleHighlightAlgorithm<TVertex, TEdge, TGraph>)
 				return "Simple";
 
 			return null;

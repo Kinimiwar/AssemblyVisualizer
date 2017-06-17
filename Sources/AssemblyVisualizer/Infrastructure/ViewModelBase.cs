@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace AssemblyVisualizer.Infrastructure
 {
-	abstract class ViewModelBase : INotifyPropertyChanged
+	internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -14,9 +14,7 @@ namespace AssemblyVisualizer.Infrastructure
 		{
 			var handler = PropertyChanged;
 			if (handler != null)
-			{
 				handler(this, new PropertyChangedEventArgs(propertyname));
-			}
 		}
 	}
 }

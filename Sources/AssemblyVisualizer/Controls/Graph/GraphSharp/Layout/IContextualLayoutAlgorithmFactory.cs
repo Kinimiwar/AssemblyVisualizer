@@ -6,10 +6,11 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-    public interface IContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph> : ILayoutAlgorithmFactory<TVertex, TEdge, TGraph>
-        where TVertex : class
-        where TEdge : IEdge<TVertex>
-        where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
-    {
-    }
+	public interface IContextualLayoutAlgorithmFactory<TVertex, TEdge, TGraph> :
+		ILayoutAlgorithmFactory<TVertex, TEdge, TGraph>
+		where TVertex : class
+		where TEdge : IEdge<TVertex>
+		where TGraph : class, IBidirectionalGraph<TVertex, TEdge>
+	{
+	}
 }

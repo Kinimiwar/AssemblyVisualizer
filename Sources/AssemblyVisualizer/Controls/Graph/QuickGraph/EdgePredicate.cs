@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-    [Pure]
-    public delegate bool EdgePredicate<TVertex, TEdge>(TEdge e)
-        where TEdge : IEdge<TVertex>;
+	[Pure]
+	public delegate bool EdgePredicate<TVertex, TEdge>(TEdge e)
+		where TEdge : IEdge<TVertex>;
 }

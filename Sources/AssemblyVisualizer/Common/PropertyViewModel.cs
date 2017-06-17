@@ -2,12 +2,11 @@
 // This code is distributed under Microsoft Public License 
 // (for details please see \docs\Ms-PL)
 
-using System.Windows.Media;
 using AssemblyVisualizer.Model;
 
 namespace AssemblyVisualizer.Common
 {
-	class PropertyViewModel : MemberViewModel, ICanBeVirtual
+	internal class PropertyViewModel : MemberViewModel, ICanBeVirtual
 	{
 		private readonly PropertyInfo _propertyInfo;
 
@@ -16,22 +15,14 @@ namespace AssemblyVisualizer.Common
 			_propertyInfo = propertyInfo;
 		}
 
-        public bool IsVirtual
-        {
-            get
-            {
-                return _propertyInfo.IsVirtual;
-            }
-        }
+		public bool IsVirtual
+		{
+			get { return _propertyInfo.IsVirtual; }
+		}
 
-        public bool IsOverride
-        {
-            get
-            {
-                return _propertyInfo.IsOverride;
-            }
-        }
-
-               
+		public bool IsOverride
+		{
+			get { return _propertyInfo.IsOverride; }
+		}
 	}
 }

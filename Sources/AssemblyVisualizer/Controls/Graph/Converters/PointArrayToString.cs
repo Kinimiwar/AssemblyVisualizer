@@ -3,9 +3,10 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
+using System.Globalization;
 using System.Text;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
 
 namespace AssemblyVisualizer.Controls.Graph.Converters
 {
@@ -13,21 +14,19 @@ namespace AssemblyVisualizer.Controls.Graph.Converters
 	{
 		#region IValueConverter Members
 
-		public object Convert( object value, Type targetType, object parameter, System.Globalization.CultureInfo culture )
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var points = value as Point[];
 
-			if ( points == null )
+			if (points == null)
 				return string.Empty;
 			var sb = new StringBuilder();
-			foreach ( var point in points )
-			{
-				sb.AppendLine( point.ToString() );
-			}
+			foreach (var point in points)
+				sb.AppendLine(point.ToString());
 			return sb;
 		}
 
-		public object ConvertBack( object value, Type targetType, object parameter, System.Globalization.CultureInfo culture )
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotImplementedException();
 		}

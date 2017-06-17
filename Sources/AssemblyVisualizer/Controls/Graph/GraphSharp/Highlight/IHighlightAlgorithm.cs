@@ -14,14 +14,14 @@ namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Highlight
 		IHighlightParameters Parameters { get; }
 
 		/// <summary>
-		/// Reset the whole highlight.
+		///     Reset the whole highlight.
 		/// </summary>
 		void ResetHighlight();
 
-		bool OnVertexHighlighting( TVertex vertex );
-		bool OnVertexHighlightRemoving( TVertex vertex );
-		bool OnEdgeHighlighting( TEdge edge );
-		bool OnEdgeHighlightRemoving( TEdge edge );
+		bool OnVertexHighlighting(TVertex vertex);
+		bool OnVertexHighlightRemoving(TVertex vertex);
+		bool OnEdgeHighlighting(TEdge edge);
+		bool OnEdgeHighlightRemoving(TEdge edge);
 
 		bool IsParametersSettable(IHighlightParameters parameters);
 		bool TrySetParameters(IHighlightParameters parameters);

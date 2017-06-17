@@ -3,77 +3,18 @@
 // (for details please see \docs\Ms-PL)
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using AssemblyVisualizer.AssemblyBrowser.Screens;
 
 namespace AssemblyVisualizer.AssemblyBrowser.UserControls
 {
 	/// <summary>
-	/// Interaction logic for CachingScreenPresenter.xaml
+	///     Interaction logic for CachingScreenPresenter.xaml
 	/// </summary>
-	partial class ScreenPresenter : UserControl
-	{    
-		#region // Dependency properties
-
-		public FrameworkElement SearchView
-		{
-			get { return (FrameworkElement)GetValue(SearchViewProperty); }
-			set { SetValue(SearchViewProperty, value); }
-		}
-		
-		public static readonly DependencyProperty SearchViewProperty =
-			DependencyProperty.Register("SearchView", typeof(FrameworkElement), typeof(ScreenPresenter), new UIPropertyMetadata(null));
-		
-		public Screen Screen
-		{
-			get { return (Screen)GetValue(ScreenProperty); }
-			set { SetValue(ScreenProperty, value); }
-		}
-
-		public static readonly DependencyProperty ScreenProperty =
-			DependencyProperty.Register("Screen", typeof(Screen), typeof(ScreenPresenter), new UIPropertyMetadata(null, ScreenPropertyChangedCallback));
-
-		private static void ScreenPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-		{
-			var screenPresenter = dependencyObject as ScreenPresenter;
-			var screenType = e.NewValue.GetType();
-			
-			if (screenType == typeof(GraphScreen))
-			{
-				var view = new GraphScreenView
-				           	{
-				           		DataContext = e.NewValue
-				           	};
-				view.LayoutFinished += screenPresenter.LayoutFinishedHandler;
-				screenPresenter.cpGraph.Content = view;
-			}
-
-            if (e.NewValue.GetType() == typeof(GraphScreen)
-                && e.OldValue == null)
-            {
-                screenPresenter.HideSearch(true);
-                return;
-            }
-
-			if (e.NewValue == null || e.OldValue == null)
-			{
-				return;
-			}
-
-			if (e.NewValue.GetType() == typeof(SearchScreen)
-				&& e.OldValue.GetType() == typeof(GraphScreen))
-			{
-				screenPresenter.ShowSearch();
-			}            
-		}
-
-		#endregion
-
+	internal partial class ScreenPresenter : UserControl
+	{
 		public ScreenPresenter()
 		{
 			InitializeComponent();
@@ -89,11 +30,11 @@ namespace AssemblyVisualizer.AssemblyBrowser.UserControls
 
 		private void HideSearch(bool instant)
 		{
-            var animationLength = instant ? 0 : 350;
+			var animationLength = instant ? 0 : 350;
 
 			var animation = new DoubleAnimation(0, TimeSpan.FromMilliseconds(animationLength));
 			animation.Completed += HideSearchCompletedHandler;
-			cpSearch.BeginAnimation(OpacityProperty, animation);            
+			cpSearch.BeginAnimation(OpacityProperty, animation);
 		}
 
 		private void ShowSearchCompletedHandler(object sender, EventArgs e)
@@ -104,14 +45,67 @@ namespace AssemblyVisualizer.AssemblyBrowser.UserControls
 		private void HideSearchCompletedHandler(object sender, EventArgs e)
 		{
 			if (Screen.GetType() != typeof(SearchScreen))
-			{
 				cpSearch.Visibility = Visibility.Collapsed;
-			}
 		}
 
 		private void LayoutFinishedHandler()
 		{
 			HideSearch(false);
 		}
+
+		#region // Dependency properties
+
+		public FrameworkElement SearchView
+		{
+			get { return (FrameworkElement) GetValue(SearchViewProperty); }
+			set { SetValue(SearchViewProperty, value); }
+		}
+
+		public static readonly DependencyProperty SearchViewProperty =
+			DependencyProperty.Register("SearchView", typeof(FrameworkElement), typeof(ScreenPresenter),
+				new UIPropertyMetadata(null));
+
+		public Screen Screen
+		{
+			get { return (Screen) GetValue(ScreenProperty); }
+			set { SetValue(ScreenProperty, value); }
+		}
+
+		public static readonly DependencyProperty ScreenProperty =
+			DependencyProperty.Register("Screen", typeof(Screen), typeof(ScreenPresenter),
+				new UIPropertyMetadata(null, ScreenPropertyChangedCallback));
+
+		private static void ScreenPropertyChangedCallback(DependencyObject dependencyObject,
+			DependencyPropertyChangedEventArgs e)
+		{
+			var screenPresenter = dependencyObject as ScreenPresenter;
+			var screenType = e.NewValue.GetType();
+
+			if (screenType == typeof(GraphScreen))
+			{
+				var view = new GraphScreenView
+				{
+					DataContext = e.NewValue
+				};
+				view.LayoutFinished += screenPresenter.LayoutFinishedHandler;
+				screenPresenter.cpGraph.Content = view;
+			}
+
+			if (e.NewValue.GetType() == typeof(GraphScreen)
+			    && e.OldValue == null)
+			{
+				screenPresenter.HideSearch(true);
+				return;
+			}
+
+			if (e.NewValue == null || e.OldValue == null)
+				return;
+
+			if (e.NewValue.GetType() == typeof(SearchScreen)
+			    && e.OldValue.GetType() == typeof(GraphScreen))
+				screenPresenter.ShowSearch();
+		}
+
+		#endregion
 	}
 }

@@ -3,20 +3,20 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using AssemblyVisualizer.Controls.Graph.QuickGraph;
 using System.Windows;
+using AssemblyVisualizer.Controls.Graph.QuickGraph;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.Layout
 {
-    public interface ILayoutContext<TVertex, TEdge, TGraph>
-        where TEdge : IEdge<TVertex>
-        where TGraph : IVertexAndEdgeListGraph<TVertex, TEdge>
-    {
-        IDictionary<TVertex, Point> Positions { get; }
-        IDictionary<TVertex, Size> Sizes { get; }
+	public interface ILayoutContext<TVertex, TEdge, TGraph>
+		where TEdge : IEdge<TVertex>
+		where TGraph : IVertexAndEdgeListGraph<TVertex, TEdge>
+	{
+		IDictionary<TVertex, Point> Positions { get; }
+		IDictionary<TVertex, Size> Sizes { get; }
 
-        TGraph Graph { get; }
+		TGraph Graph { get; }
 
-        global::AssemblyVisualizer.Controls.Graph.GraphSharp.Layout.LayoutMode Mode { get; }
-    }
+		LayoutMode Mode { get; }
+	}
 }

@@ -8,12 +8,12 @@ using AssemblyVisualizer.Controls.Graph.QuickGraph;
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp
 {
 	/// <summary>
-	/// Simple algorithm interface which is not connected to any graph.
+	///     Simple algorithm interface which is not connected to any graph.
 	/// </summary>
 	public interface IAlgorithm
 	{
-		object SyncRoot { get;}
-		ComputationState State { get;}
+		object SyncRoot { get; }
+		ComputationState State { get; }
 
 		void Compute();
 		void Abort();

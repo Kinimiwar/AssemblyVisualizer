@@ -5,376 +5,333 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.Windows.Input;
 using AssemblyVisualizer.AssemblyBrowser.ViewModels;
 using AssemblyVisualizer.Controls.Graph.QuickGraph;
 using AssemblyVisualizer.Infrastructure;
-using System.Windows.Input;
-using System.Windows;
 using AssemblyVisualizer.Properties;
 
 namespace AssemblyVisualizer.AssemblyBrowser.Screens
 {
-    class GraphScreen : Screen
-    {
-        private TypeGraph _graph;
-        private TypeViewModel _type;
-        private TypeViewModel _typeForDetails;
-        private bool _isMembersPopupPinned;
-        private string _searchTerm;
-        private IEnumerable<TypeViewModel> _types;
-        private readonly UserCommand _toggleColorizeUserCommand;
-        private bool _isSearchVisible;
-        private bool _isAssemblyListVisible = true;
+	internal class GraphScreen : Screen
+	{
+		private readonly UserCommand _toggleColorizeUserCommand;
+		private TypeGraph _graph;
+		private bool _isAssemblyListVisible = true;
+		private bool _isMembersPopupPinned;
+		private bool _isSearchVisible;
+		private string _searchTerm;
+		private TypeViewModel _type;
+		private TypeViewModel _typeForDetails;
+		private IEnumerable<TypeViewModel> _types;
 
-        public GraphScreen(AssemblyBrowserWindowViewModel windowViewModel)
-            : base(windowViewModel)
-        {
-            PinCommand = new DelegateCommand(PinCommandHandler);
-            HideSearchCommand = new DelegateCommand(HideSearchCommandHandler);
-            ShowSearchCommand = new DelegateCommand(ShowSearchCommandHandler);
+		public GraphScreen(AssemblyBrowserWindowViewModel windowViewModel)
+			: base(windowViewModel)
+		{
+			PinCommand = new DelegateCommand(PinCommandHandler);
+			HideSearchCommand = new DelegateCommand(HideSearchCommandHandler);
+			ShowSearchCommand = new DelegateCommand(ShowSearchCommandHandler);
 
-            _toggleColorizeUserCommand = new UserCommand(WindowViewModel.IsColorized
-                                                            ? Resources.Decolorize
-                                                            : Resources.Colorize, ToggleColorizeCommandHandler);
+			_toggleColorizeUserCommand = new UserCommand(WindowViewModel.IsColorized
+				? Resources.Decolorize
+				: Resources.Colorize, ToggleColorizeCommandHandler);
 
-            Commands = new ObservableCollection<UserCommand>
-			           	{
-			           		new UserCommand(Resources.FillGraph, OnFillGraphRequest),
-			           		new UserCommand(Resources.OriginalSize, OnOriginalSizeRequest),
-			           		                    WindowViewModel.ShowSearchUserCommand,
-			           		new UserCommand(Resources.SearchInGraph, ShowSearchCommand),
-			           		_toggleColorizeUserCommand
-			           	};
-        }
+			Commands = new ObservableCollection<UserCommand>
+			{
+				new UserCommand(Resources.FillGraph, OnFillGraphRequest),
+				new UserCommand(Resources.OriginalSize, OnOriginalSizeRequest),
+				WindowViewModel.ShowSearchUserCommand,
+				new UserCommand(Resources.SearchInGraph, ShowSearchCommand),
+				_toggleColorizeUserCommand
+			};
+		}
 
-        public ICommand PinCommand { get; private set; }
-        public ICommand HideSearchCommand { get; private set; }
-        public ICommand ShowSearchCommand { get; private set; }
+		public ICommand PinCommand { get; private set; }
+		public ICommand HideSearchCommand { get; private set; }
+		public ICommand ShowSearchCommand { get; private set; }
 
-        public ObservableCollection<UserCommand> Commands { get; private set; }
+		public ObservableCollection<UserCommand> Commands { get; private set; }
 
-        public event Action GraphChanged;
-        public event Action ShowDetailsRequest;
-        public event Action HideDetailsRequest;
-        public event Action FillGraphRequest;
-        public event Action OriginalSizeRequest;
-        public event Action FocusSearchRequest;
+		public override bool AllowAssemblyDrop
+		{
+			get { return false; }
+		}
 
-        public override bool AllowAssemblyDrop
-        {
-            get { return false; }
-        }
+		public bool IsSearchVisible
+		{
+			get { return _isSearchVisible; }
+			set
+			{
+				_isSearchVisible = value;
+				OnPropertyChanged("IsSearchVisible");
+			}
+		}
 
-        public bool IsSearchVisible
-        {
-            get
-            {
-                return _isSearchVisible;
-            }
-            set
-            {
-                _isSearchVisible = value;
-                OnPropertyChanged("IsSearchVisible");
-            }
-        }
+		public bool IsAssemblyListVisible
+		{
+			get { return _isAssemblyListVisible; }
+			set
+			{
+				_isAssemblyListVisible = value;
+				OnPropertyChanged("IsAssemblyListVisible");
+			}
+		}
 
-        public bool IsAssemblyListVisible
-        {
-            get
-            {
-                return _isAssemblyListVisible;
-            }
-            set
-            {
-                _isAssemblyListVisible = value;
-                OnPropertyChanged("IsAssemblyListVisible");
-            }
-        }
+		public TypeViewModel Type
+		{
+			get { return _type; }
+			set
+			{
+				if (_type != null)
+					_type.IsCurrent = false;
+				value.IsCurrent = true;
+				_type = value;
+				OnPropertyChanged("Type");
+			}
+		}
 
-        public TypeViewModel Type
-        {
-            get { return _type; }
-            set
-            {
-                if (_type != null)
-                {
-                    _type.IsCurrent = false;
-                }
-                value.IsCurrent = true;
-                _type = value;
-                OnPropertyChanged("Type");
-            }
-        }
+		public TypeViewModel TypeForDetails
+		{
+			get { return _typeForDetails; }
+			set
+			{
+				_typeForDetails = value;
+				OnPropertyChanged("TypeForDetails");
+			}
+		}
 
-        public TypeViewModel TypeForDetails
-        {
-            get { return _typeForDetails; }
-            set
-            {
-                _typeForDetails = value;
-                OnPropertyChanged("TypeForDetails");
-            }
-        }
+		public TypeGraph Graph
+		{
+			get { return _graph; }
+			set
+			{
+				_graph = value;
+				OnPropertyChanged("Graph");
+			}
+		}
 
-        public TypeGraph Graph
-        {
-            get { return _graph; }
-            set
-            {
-                _graph = value;
-                OnPropertyChanged("Graph");
-            }
-        }
+		public string SearchTerm
+		{
+			get { return _searchTerm; }
+			set
+			{
+				_searchTerm = value;
+				OnPropertyChanged("SearchTerm");
+				PerformSearch();
+			}
+		}
 
-        public string SearchTerm
-        {
-            get { return _searchTerm; }
-            set
-            {
-                _searchTerm = value;
-                OnPropertyChanged("SearchTerm");
-                PerformSearch();
-            }
-        }
+		public bool IsMembersPopupPinned
+		{
+			get { return _isMembersPopupPinned; }
+			set
+			{
+				_isMembersPopupPinned = value;
+				OnPropertyChanged("IsMembersPopupPinned");
+			}
+		}
 
-        public bool IsMembersPopupPinned
-        {
-            get { return _isMembersPopupPinned; }
-            set
-            {
-                _isMembersPopupPinned = value;
-                OnPropertyChanged("IsMembersPopupPinned");
-            }
-        }
+		private IEnumerable<TypeViewModel> Types
+		{
+			get
+			{
+				if (_types == null)
+					_types = _type.FlattenedHierarchy;
+				return _types;
+			}
+		}
 
-        private IEnumerable<TypeViewModel> Types
-        {
-            get
-            {
-                if (_types == null)
-                {
-                    _types = _type.FlattenedHierarchy;
-                }
-                return _types;
-            }
-        }
+		public event Action GraphChanged;
+		public event Action ShowDetailsRequest;
+		public event Action HideDetailsRequest;
+		public event Action FillGraphRequest;
+		public event Action OriginalSizeRequest;
+		public event Action FocusSearchRequest;
 
-        public override void ShowInnerSearch()
-        {
-            ShowSearchCommand.Execute(null);
-        }
+		public override void ShowInnerSearch()
+		{
+			ShowSearchCommand.Execute(null);
+		}
 
-        public override void ToggleAssembliesVisibility()
-        {
-            IsAssemblyListVisible = !IsAssemblyListVisible;
-        }
+		public override void ToggleAssembliesVisibility()
+		{
+			IsAssemblyListVisible = !IsAssemblyListVisible;
+		}
 
-        public void ShowDetails(TypeViewModel type)
-        {
-            TypeForDetails = type;
-            OnShowDetailsRequest();
-        }
+		public void ShowDetails(TypeViewModel type)
+		{
+			TypeForDetails = type;
+			OnShowDetailsRequest();
+		}
 
-        public void Show(TypeViewModel type, bool adjustExpansion)
-        {
-            _types = null;
-            Type = type;
-            Graph = CreateGraph(type, adjustExpansion);
-            OnGraphChanged();
-        }
+		public void Show(TypeViewModel type, bool adjustExpansion)
+		{
+			_types = null;
+			Type = type;
+			Graph = CreateGraph(type, adjustExpansion);
+			OnGraphChanged();
+		}
 
-        public void Expand(TypeViewModel typeViewModel)
-        {
-            typeViewModel.IsExpanded = true;
-            AdjustExpansion(typeViewModel);            
+		public void Expand(TypeViewModel typeViewModel)
+		{
+			typeViewModel.IsExpanded = true;
+			AdjustExpansion(typeViewModel);
 
-            foreach (var viewModel in typeViewModel.FlattenedHierarchy)
-            {
-                if (viewModel == typeViewModel)
-                {
-                    continue;
-                }
+			foreach (var viewModel in typeViewModel.FlattenedHierarchy)
+			{
+				if (viewModel == typeViewModel)
+					continue;
 
-                Graph.AddVertex(viewModel);
-                if (viewModel.BaseType == null)
-                {
-                    continue;
-                }
-                Graph.AddEdge(new Edge<TypeViewModel>(viewModel, viewModel.BaseType));
-            }
+				Graph.AddVertex(viewModel);
+				if (viewModel.BaseType == null)
+					continue;
+				Graph.AddEdge(new Edge<TypeViewModel>(viewModel, viewModel.BaseType));
+			}
 
-            _types = null;
-            PerformSearch();
-        }
+			_types = null;
+			PerformSearch();
+		}
 
-        public void ClearSearch()
-        {
-            foreach (var type in Types)
-            {
-                type.IsMarked = false;
-            }
-        }
+		public void ClearSearch()
+		{
+			foreach (var type in Types)
+				type.IsMarked = false;
+		}
 
-        private static TypeGraph CreateGraph(TypeViewModel typeViewModel, bool adjustExpansion)
-        {
-            var graph = new TypeGraph(true);
+		private static TypeGraph CreateGraph(TypeViewModel typeViewModel, bool adjustExpansion)
+		{
+			var graph = new TypeGraph(true);
 
-            if (adjustExpansion)
-            {
-                ExpandAll(typeViewModel);
-                if (typeViewModel.DescendantsCount > 100)
-                {
-                    AdjustExpansion(typeViewModel);
-                }
-            }
-            else
-            {
-                typeViewModel.IsExpanded = true;
-                if (typeViewModel.DescendantsCount <= 100)
-                {
-                    ExpandAll(typeViewModel);
-                }
-            }
-            var flattenedHierarchy = typeViewModel.FlattenedHierarchy;
-            graph.AddVertexRange(flattenedHierarchy);
-            foreach (var viewModel in flattenedHierarchy)
-            {
-                if (viewModel.BaseType == null || viewModel == typeViewModel)
-                {
-                    continue;
-                }
-                graph.AddEdge(new Edge<TypeViewModel>(viewModel, viewModel.BaseType));
-            }
-            return graph;
-        }
+			if (adjustExpansion)
+			{
+				ExpandAll(typeViewModel);
+				if (typeViewModel.DescendantsCount > 100)
+					AdjustExpansion(typeViewModel);
+			}
+			else
+			{
+				typeViewModel.IsExpanded = true;
+				if (typeViewModel.DescendantsCount <= 100)
+					ExpandAll(typeViewModel);
+			}
+			var flattenedHierarchy = typeViewModel.FlattenedHierarchy;
+			graph.AddVertexRange(flattenedHierarchy);
+			foreach (var viewModel in flattenedHierarchy)
+			{
+				if (viewModel.BaseType == null || viewModel == typeViewModel)
+					continue;
+				graph.AddEdge(new Edge<TypeViewModel>(viewModel, viewModel.BaseType));
+			}
+			return graph;
+		}
 
-        private static void ExpandAll(TypeViewModel typeViewModel)
-        {
-            typeViewModel.IsExpanded = true;
-            foreach (var type in typeViewModel.DerivedTypes)
-            {
-                ExpandAll(type);
-            }
-        }
+		private static void ExpandAll(TypeViewModel typeViewModel)
+		{
+			typeViewModel.IsExpanded = true;
+			foreach (var type in typeViewModel.DerivedTypes)
+				ExpandAll(type);
+		}
 
-        private static void AdjustExpansion(TypeViewModel typeViewModel)
-        {
-            foreach (var type in typeViewModel.DerivedTypes)
-            {
-                if (type.DirectDescendantsCount > 3)
-                {
-                    type.IsExpanded = false;
-                }                
-                AdjustExpansion(type);                
-            }
-        }        
+		private static void AdjustExpansion(TypeViewModel typeViewModel)
+		{
+			foreach (var type in typeViewModel.DerivedTypes)
+			{
+				if (type.DirectDescendantsCount > 3)
+					type.IsExpanded = false;
+				AdjustExpansion(type);
+			}
+		}
 
-        private void PerformSearch()
-        {
-            if (string.IsNullOrEmpty(SearchTerm) || string.IsNullOrEmpty(SearchTerm.Trim()))
-            {
-                ClearSearch();
-                return;
-            }
+		private void PerformSearch()
+		{
+			if (string.IsNullOrEmpty(SearchTerm) || string.IsNullOrEmpty(SearchTerm.Trim()))
+			{
+				ClearSearch();
+				return;
+			}
 
-            foreach (var type in Types)
-            {
-                type.IsMarked = type.Name
-                    .IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0;
-            }
-        }
+			foreach (var type in Types)
+				type.IsMarked = type.Name
+					                .IndexOf(SearchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0;
+		}
 
-        private void PinCommandHandler()
-        {
-            if (!IsMembersPopupPinned)
-            {
-                IsMembersPopupPinned = true;
-                return;
-            }
-            IsMembersPopupPinned = false;
-            OnHideDetailsRequest();
-        }
+		private void PinCommandHandler()
+		{
+			if (!IsMembersPopupPinned)
+			{
+				IsMembersPopupPinned = true;
+				return;
+			}
+			IsMembersPopupPinned = false;
+			OnHideDetailsRequest();
+		}
 
-        private void HideSearchCommandHandler()
-        {
-            IsSearchVisible = false;
-            SearchTerm = string.Empty;
-        }
+		private void HideSearchCommandHandler()
+		{
+			IsSearchVisible = false;
+			SearchTerm = string.Empty;
+		}
 
-        private void ShowSearchCommandHandler()
-        {
-            IsSearchVisible = true;
-            OnFocusSearchRequest();
-        }
+		private void ShowSearchCommandHandler()
+		{
+			IsSearchVisible = true;
+			OnFocusSearchRequest();
+		}
 
-        private void ToggleColorizeCommandHandler()
-        {
-            WindowViewModel.IsColorized = !WindowViewModel.IsColorized;
-            _toggleColorizeUserCommand.Text = WindowViewModel.IsColorized
-                                                ? Resources.Decolorize
-                                                : Resources.Colorize;
-        }
+		private void ToggleColorizeCommandHandler()
+		{
+			WindowViewModel.IsColorized = !WindowViewModel.IsColorized;
+			_toggleColorizeUserCommand.Text = WindowViewModel.IsColorized
+				? Resources.Decolorize
+				: Resources.Colorize;
+		}
 
-        private void OnGraphChanged()
-        {
-            var handler = GraphChanged;
+		private void OnGraphChanged()
+		{
+			var handler = GraphChanged;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
+			if (handler != null)
+				handler();
+		}
 
-        private void OnShowDetailsRequest()
-        {
-            var handler = ShowDetailsRequest;
+		private void OnShowDetailsRequest()
+		{
+			var handler = ShowDetailsRequest;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
+			if (handler != null)
+				handler();
+		}
 
-        private void OnHideDetailsRequest()
-        {
-            var handler = HideDetailsRequest;
+		private void OnHideDetailsRequest()
+		{
+			var handler = HideDetailsRequest;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
+			if (handler != null)
+				handler();
+		}
 
-        private void OnFillGraphRequest()
-        {
-            var handler = FillGraphRequest;
+		private void OnFillGraphRequest()
+		{
+			var handler = FillGraphRequest;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
+			if (handler != null)
+				handler();
+		}
 
-        private void OnOriginalSizeRequest()
-        {
-            var handler = OriginalSizeRequest;
+		private void OnOriginalSizeRequest()
+		{
+			var handler = OriginalSizeRequest;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
+			if (handler != null)
+				handler();
+		}
 
-        private void OnFocusSearchRequest()
-        {
-            var handler = FocusSearchRequest;
+		private void OnFocusSearchRequest()
+		{
+			var handler = FocusSearchRequest;
 
-            if (handler != null)
-            {
-                handler();
-            }
-        }
-    }
+			if (handler != null)
+				handler();
+		}
+	}
 }

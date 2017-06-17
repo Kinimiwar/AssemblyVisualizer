@@ -7,13 +7,13 @@ using System.Windows;
 
 namespace AssemblyVisualizer.Controls.Graph.GraphSharp.OverlapRemoval
 {
-    public class OverlapRemovalContext<TVertex> : IOverlapRemovalContext<TVertex>
-    {
-        public IDictionary<TVertex, Rect> Rectangles { get; private set; }
+	public class OverlapRemovalContext<TVertex> : IOverlapRemovalContext<TVertex>
+	{
+		public OverlapRemovalContext(IDictionary<TVertex, Rect> rectangles)
+		{
+			Rectangles = rectangles;
+		}
 
-        public OverlapRemovalContext( IDictionary<TVertex, Rect> rectangles )
-        {
-            Rectangles = rectangles;
-        }
-    }
+		public IDictionary<TVertex, Rect> Rectangles { get; private set; }
+	}
 }

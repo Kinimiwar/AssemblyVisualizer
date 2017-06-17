@@ -3,24 +3,26 @@
 // (for details please see \docs\Ms-PL)
 
 using System.Collections.Generic;
-using AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts;
 using System.Diagnostics.Contracts;
+using AssemblyVisualizer.Controls.Graph.QuickGraph.Contracts;
 
 namespace AssemblyVisualizer.Controls.Graph.QuickGraph
 {
-    [ContractClass(typeof(IIncidenceGraphContract<,>))]
-    public interface IIncidenceGraph<TVertex, TEdge> 
-        : IImplicitGraph<TVertex,TEdge>
-        where TEdge : IEdge<TVertex>
-    {
-        bool ContainsEdge(TVertex source, TVertex target);
-        bool TryGetEdges(
-            TVertex source,
-            TVertex target,
-            out IEnumerable<TEdge> edges);
-        bool TryGetEdge(
-            TVertex source,
-            TVertex target,
-            out TEdge edge);
-    }
+	[ContractClass(typeof(IIncidenceGraphContract<,>))]
+	public interface IIncidenceGraph<TVertex, TEdge>
+		: IImplicitGraph<TVertex, TEdge>
+		where TEdge : IEdge<TVertex>
+	{
+		bool ContainsEdge(TVertex source, TVertex target);
+
+		bool TryGetEdges(
+			TVertex source,
+			TVertex target,
+			out IEnumerable<TEdge> edges);
+
+		bool TryGetEdge(
+			TVertex source,
+			TVertex target,
+			out TEdge edge);
+	}
 }
