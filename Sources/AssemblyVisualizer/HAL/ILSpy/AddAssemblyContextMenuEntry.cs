@@ -36,7 +36,7 @@ namespace AssemblyVisualizer.HAL.ILSpy
 		{
 			var assemblyDefinitions = context.SelectedTreeNodes
 				.OfType<AssemblyTreeNode>()
-				.Select(n => HAL.Converter.Assembly(n.LoadedAssembly.AssemblyDefinition))
+				.Select(n => HAL.Converter.Assembly(n.LoadedAssembly.GetAssemblyDefinitionAsync().Result))
 				.ToList();
 
 			var window = WindowManager.AssemblyBrowsers.Single();

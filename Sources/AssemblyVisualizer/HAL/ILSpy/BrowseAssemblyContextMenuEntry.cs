@@ -30,7 +30,7 @@ namespace AssemblyVisualizer.AssemblyBrowser
 		{
 			var assemblyDefinitions = context.SelectedTreeNodes
 				.OfType<AssemblyTreeNode>()
-				.Select(n => Converter.Assembly(n.LoadedAssembly.AssemblyDefinition))
+				.Select(n => Converter.Assembly(n.LoadedAssembly.GetAssemblyDefinitionAsync().Result))
 				.ToList();
 
 			Services.BrowseAssemblies(assemblyDefinitions);

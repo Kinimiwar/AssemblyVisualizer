@@ -52,7 +52,7 @@ namespace AssemblyVisualizer.AssemblyBrowser
 				var loadedAssembly =
 					Services.MainWindow.CurrentAssemblyList.OpenAssembly(assemblyFilePath);
 
-				ViewModel.AddAssembly(Converter.Assembly(loadedAssembly.AssemblyDefinition));
+				ViewModel.AddAssembly(Converter.Assembly(loadedAssembly.GetAssemblyDefinitionAsync().Result));
 			}
 
 #endif
