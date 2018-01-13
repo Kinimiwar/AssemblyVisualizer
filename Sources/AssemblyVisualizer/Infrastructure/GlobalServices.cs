@@ -8,7 +8,7 @@ namespace AssemblyVisualizer.Infrastructure
 {
 	internal static class GlobalServices
 	{
-		private const string SourcesUrl = @"http://denismarkelov.github.com/AssemblyVisualizer";
+		private const string SourcesUrl = @"https://github.com/denismarkelov/AssemblyVisualizer";
 
 		public static void NavigateToSources()
 		{
