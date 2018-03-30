@@ -1,6 +1,6 @@
 # Assembly Visualizer 
 
-*Assembly Visualizer* is a data visualization plugin for .NET decompilers, currently supporting ILSpy and Reflector.    
+*Assembly Visualizer* is a data visualization plugin for ILSpy.    
 
 Website: http://denismarkelov.github.com/AssemblyVisualizer    
 Copyright 2011 - 2015 Denis Markelov    
@@ -37,6 +37,4 @@ Usage: 'Browse Dependencies' context menu item for assemblies.
 
 ## How to start to use a plugin  
 
-Download the latest build from the Downloads section, put assembly into the folder with your decompiler's    
-executable. For Reflector you also need to add it explicitly at Tools -> Add-Ins window.
-  
+Download the latest build from the Downloads section, put assembly into the folder with ILSpy.exe file.
