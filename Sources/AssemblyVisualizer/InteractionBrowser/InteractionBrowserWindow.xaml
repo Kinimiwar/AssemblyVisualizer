@@ -18,6 +18,10 @@
 
             <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
 
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+
             <!--Vertex style-->
             <Style TargetType="{x:Type Graph:VertexControl}">
                 <Setter Property="Template">
